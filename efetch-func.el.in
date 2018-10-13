@@ -49,10 +49,27 @@ output."
                 (shell-command-to-string "guix --version")
                 "\n"))))
 
+(defun ef-distro ()
+  "Return operation system name and version."
+  (cond
+   ;; lsb_release
+   ((eq (shell-command "type -p lsb_release") 0)
+    (shell-command-to-string "lsb_release -sd"))
+   ;; Guix
+   ((eq (shell-command "type -p guix") 0)
+    (concat "GuixSD "
+            (nth 4 (split-string
+                    (shell-command-to-string
+                     "guix system -V")
+                    " \\|\n"))))
+   ;; Default
+   (t "Unknown OS")))
+
 (defun efetch ()
   "Display emacs and system configuration in new buffer."
   (interactive)
   (let* ((buff  (generate-new-buffer "efetch"))
+         (os             (ef-distro))
          (kernel         (ef-uname "-s"))
          (kernel-version (ef-uname "-r"))
          (kernel-arch    (ef-uname "-m"))
@@ -74,6 +91,7 @@ output."
      (create-image (concat ef-images-dir "/default.png")))
     (insert "\n")
 
+    (ef-display "OS             " os)
     (ef-display "Architecture   " kernel-arch)
     (ef-display "Kernel         " kernel)
     (ef-display "System         " system-configuration)
