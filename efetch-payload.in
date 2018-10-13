@@ -1,0 +1,9 @@
+
+
+;;; Efetch-mode
+
+(add-to-list 'load-path "@EMACS_DIR@")
+(load "efetch-mode")
+(load "efetch-func")
+
+;;; End of Efetch-mode
