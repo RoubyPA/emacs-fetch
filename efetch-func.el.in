@@ -25,10 +25,19 @@
 ;;; Code:
 
 (defvar ef-images-dir "@INST_IMAGES_DIR@")
+(defvar ef-default-spaces 15)
+(defvar ef-default-separator " : ")
+
+(defun ef-add-spaces (str n)
+  (if (= n 0)
+      str
+    (add-char (concat str " ") (- n 1))))
 
 (defun ef-display (msg str)
   "Display new line in eftech buffer."
-  (insert (concat msg " : " str "\n")))
+  (insert
+   (concat (ef-add-spaces msg (- ef-default-spaces (length msg)))
+           ef-default-separator str "\n")))
 
 (defun ef-uname (opt)
   "Exec uname with 'opt' and return the first line of command
@@ -91,17 +100,17 @@ output."
      (create-image (concat ef-images-dir "/default.png")))
     (insert "\n")
 
-    (ef-display "OS             " os)
-    (ef-display "Architecture   " kernel-arch)
-    (ef-display "Kernel         " kernel)
-    (ef-display "System         " system-configuration)
-    (ef-display "Host           " (system-name))
-    (ef-display "Kernel         " kernel-version)
-    (ef-display "Shell          " shell-name)
+    (ef-display "OS" os)
+    (ef-display "Architecture" kernel-arch)
+    (ef-display "Kernel" kernel)
+    (ef-display "System" system-configuration)
+    (ef-display "Host" (system-name))
+    (ef-display "Kernel" kernel-version)
+    (ef-display "Shell" shell-name)
     (if (file-exists-p "~/.guix-profile")
-        (ef-display "Guix           " guix-version))
-    (ef-display "Emacs version  " emacs-short-info)
-    (ef-display "Emacs uptime   " (emacs-uptime))
+        (ef-display "Guix" guix-version))
+    (ef-display "Emacs version" emacs-short-info)
+    (ef-display "Emacs uptime" (emacs-uptime))
 
     ;; Set buffer to read only mode
     (read-only-mode)))
