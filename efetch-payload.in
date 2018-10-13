@@ -1,9 +1,9 @@
 
-
 ;;; Efetch-mode
 
-(add-to-list 'load-path "@EMACS_DIR@")
-(load "efetch-mode")
-(load "efetch-func")
+(when (file-exists-p "@EMACS_DIR@")
+  (add-to-list 'load-path "@EMACS_DIR@")
+  (load "efetch-mode")
+  (load "efetch-func"))
 
 ;;; End of Efetch-mode
