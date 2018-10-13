@@ -31,13 +31,19 @@
 (defun ef-add-spaces (str n)
   (if (= n 0)
       str
-    (add-char (concat str " ") (- n 1))))
+    (ef-add-spaces (concat str " ") (- n 1))))
 
-(defun ef-display (msg str)
+(defun ef-display (l)
   "Display new line in eftech buffer."
   (insert
-   (concat (ef-add-spaces msg (- ef-default-spaces (length msg)))
-           ef-default-separator str "\n")))
+   (concat (ef-add-spaces (car l) (- ef-default-spaces (length (car l))))
+           ef-default-separator (cdr l) "\n")))
+
+(defun ef-emacs-info ()
+  (let ((emacs-info (split-string (emacs-version))))
+    (concat (nth 0 emacs-info) " "
+            (nth 1 emacs-info) " "
+            (nth 2 emacs-info))))
 
 (defun ef-uname (opt)
   "Exec uname with 'opt' and return the first line of command
@@ -49,7 +55,6 @@ output."
 (defun ef-shell ()
   "Return shell name."
   (capitalize (file-name-nondirectory (getenv "SHELL"))))
-
 
 (defun ef-guix-version ()
   "Return Guix version."
@@ -78,16 +83,14 @@ output."
   "Display emacs and system configuration in new buffer."
   (interactive)
   (let* ((buff  (generate-new-buffer "efetch"))
-         (os             (ef-distro))
-         (kernel         (ef-uname "-s"))
-         (kernel-version (ef-uname "-r"))
-         (kernel-arch    (ef-uname "-m"))
-         (shell-name     (ef-shell))
-         (emacs-info (split-string (emacs-version)))
-         (emacs-short-info (concat (nth 0 emacs-info) " "
-                                   (nth 1 emacs-info) " "
-                                   (nth 2 emacs-info)))
-         (guix-version   (ef-guix-version)))
+         (data  `(("OS"     . ,(ef-distro))
+                  ("Host"   . ,(system-name))
+                  ("Kernel" . ,(ef-uname "-s"))
+                  ("Kernel version" . ,(ef-uname "-r"))
+                  ("Arch"   . ,(ef-uname "-m"))
+                  ("Shell"  . ,(ef-shell))
+                  ("Emacs"  . ,(ef-emacs-info))
+                  ("Emacs uptime" . ,(emacs-uptime)))))
     ;; Switch to new buffer and active efetch-mode
     (set-buffer buff)
     (switch-to-buffer buff)
@@ -100,17 +103,7 @@ output."
      (create-image (concat ef-images-dir "/default.png")))
     (insert "\n")
 
-    (ef-display "OS" os)
-    (ef-display "Architecture" kernel-arch)
-    (ef-display "Kernel" kernel)
-    (ef-display "System" system-configuration)
-    (ef-display "Host" (system-name))
-    (ef-display "Kernel" kernel-version)
-    (ef-display "Shell" shell-name)
-    (if (file-exists-p "~/.guix-profile")
-        (ef-display "Guix" guix-version))
-    (ef-display "Emacs version" emacs-short-info)
-    (ef-display "Emacs uptime" (emacs-uptime))
+    (mapc 'ef-display data)
 
     ;; Set buffer to read only mode
     (read-only-mode)))
