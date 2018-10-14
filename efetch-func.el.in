@@ -62,6 +62,16 @@ output."
 (defun ef-uptime ()
   (nth 2 (split-string (shell-command-to-string "uptime"))))
 
+(defun ef-load-avg ()
+  (with-temp-buffer
+    (insert-file-contents "/proc/loadavg")
+    (let* ((line (buffer-substring-no-properties (line-beginning-position)
+                                                 (line-end-position)))
+           (sline (split-string line " ")))
+      (concat (nth 0 sline) " "
+              (nth 1 sline) " "
+              (nth 2 sline)))))
+
 (defun ef-shell ()
   "Return shell name."
   (capitalize (file-name-nondirectory (getenv "SHELL"))))
@@ -93,6 +103,7 @@ output."
                   ("Kernel version" . ,(ef-uname "-r"))
                   ("Arch"   . ,(ef-uname "-m"))
                   ("CPU"    . ,(ef-cpu-model))
+                  ("Load average" . ,(ef-load-avg))
                   ("Shell"  . ,(ef-shell))
                   ("Emacs"  . ,(ef-emacs-info))
                   ("Emacs uptime" . ,(emacs-uptime)))))
