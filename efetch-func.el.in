@@ -52,6 +52,9 @@ output."
         (shell-command-to-string (format "uname %s" opt))
         "\n")))
 
+(defun ef-uptime ()
+  (nth 2 (split-string (shell-command-to-string "uptime"))))
+
 (defun ef-shell ()
   "Return shell name."
   (capitalize (file-name-nondirectory (getenv "SHELL"))))
@@ -78,6 +81,7 @@ output."
   (let* ((buff  (generate-new-buffer "efetch"))
          (data  `(("OS"     . ,(ef-distro))
                   ("Host"   . ,(system-name))
+                  ("Uptime" . ,(ef-uptime))
                   ("Kernel" . ,(ef-uname "-s"))
                   ("Kernel version" . ,(ef-uname "-r"))
                   ("Arch"   . ,(ef-uname "-m"))
