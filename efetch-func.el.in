@@ -56,13 +56,6 @@ output."
   "Return shell name."
   (capitalize (file-name-nondirectory (getenv "SHELL"))))
 
-(defun ef-guix-version ()
-  "Return Guix version."
-  (capitalize (car                      ;First line
-               (split-string            ;Split by line
-                (shell-command-to-string "guix --version")
-                "\n"))))
-
 (defun ef-distro ()
   "Return operation system name and version."
   (cond
