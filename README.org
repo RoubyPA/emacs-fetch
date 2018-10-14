@@ -1,3 +1,30 @@
 #+title: Emacs Fetch
 #+startup: indent
 
+[[./doc/images/efetch.png]]
+
+* Usage
+
+#+BEGIN_EXAMPLE
+M-x efetch
+#+END_EXAMPLE
+
+* Install
+
+Efetch use makefile for installation.
+
+#+BEGIN_EXAMPLE
+make install
+#+END_EXAMPLE
+
+** Upgrade
+
+#+BEGIN_EXAMPLE
+make upgrade
+#+END_EXAMPLE
+
+** Uninstall
+
+#+BEGIN_EXAMPLE
+make uninstall
+#+END_EXAMPLE
