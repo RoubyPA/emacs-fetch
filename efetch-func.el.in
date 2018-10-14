@@ -52,6 +52,13 @@ output."
         (shell-command-to-string (format "uname %s" opt))
         "\n")))
 
+(defun ef-cpu-model ()
+  (let ((cmd "cat /proc/cpuinfo |grep 'model name'"))
+    (car (cdr (split-string
+               (car (split-string (shell-command-to-string cmd)
+                                  "\n"))
+               ": ")))))
+
 (defun ef-uptime ()
   (nth 2 (split-string (shell-command-to-string "uptime"))))
 
@@ -85,6 +92,7 @@ output."
                   ("Kernel" . ,(ef-uname "-s"))
                   ("Kernel version" . ,(ef-uname "-r"))
                   ("Arch"   . ,(ef-uname "-m"))
+                  ("CPU"    . ,(ef-cpu-model))
                   ("Shell"  . ,(ef-shell))
                   ("Emacs"  . ,(ef-emacs-info))
                   ("Emacs uptime" . ,(emacs-uptime)))))
