@@ -24,13 +24,21 @@
 
 ;;; Code:
 
+;;; Highlights
 (setq efetch-highlights
       '(("\\(.*\\) :" . font-lock-function-name-face)
         ("Efetch"     . font-lock-constant-face)))
 
+;;; Keymap
+(defvar efetch-mode-map nil "Keymap for `efetch-mode-map'")
+(setq efetch-mode-map (make-sparse-keymap))
+(define-key efetch-mode-map (kbd "C-c C-c") 'efetch-update)
+
+;;; Define mode
 (define-derived-mode efetch-mode fundamental-mode "efetch"
   "Major mode for displaying efetch buffer."
-  (setq font-lock-defaults '(efetch-highlights)))
+  (setq font-lock-defaults '(efetch-highlights))
+  (use-local-map efetch-mode-map))
 
 (provide 'efetch-mode)
 ;;; efetch-mode.el ends here
