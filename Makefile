@@ -19,8 +19,6 @@ EMACS = emacs -Q -q --batch -nw
 EMACS_LOAD = -l efetch-mode.el
 EMACS_COMPILE = -f emacs-lisp-byte-compile
 EMACS_DIR = ~/.emacs.d/efetch-mode/
-EMACS_DEFAULT_CONF = ~/.emacs
-EMACS_PAYLOAD = efetch-payload.txt
 
 IMAGES_DIR = images/
 INST_IMAGES_DIR = $(EMACS_DIR)$(IMAGES_DIR)
@@ -32,7 +30,7 @@ SOURCES += $(SED_SOURCES:.el.in=.el)
 
 COMPILED_FILE += $(SOURCES:.el=.elc)
 
-.PHONY: clean install uninstall upgrade compile copy-sources copy-images
+.PHONY: clean install uninstall compile copy-sources copy-images
 
 all: compile
 
@@ -46,31 +44,22 @@ compile: $(SOURCES) $(COMPILED_FILE) $(EMACS_PAYLOAD)
 	$(info Sed          $@)
 	@sed 's|@INST_IMAGES_DIR@|$(INST_IMAGES_DIR)|' < $< >$@
 
-%.txt: %.in
-	$(info Sed          $@)
-	@sed 's|@EMACS_DIR@|$(EMACS_DIR)|' < $< >$@
-
 copy-sources:
 	$(info Install      *.elc)
 	@mkdir $(EMACS_DIR) -p
 	@cp *.el  $(EMACS_DIR) -v
 	@cp *.elc $(EMACS_DIR) -v
+
 copy-images:
 	$(info Install      *.png)
 	@mkdir $(INST_IMAGES_DIR) -p
 	@cp ./$(IMAGES_DIR)*.png $(INST_IMAGES_DIR) -v
 
-payload:
-	$(info Payload)
-	@cat $(EMACS_PAYLOAD) >> $(EMACS_DEFAULT_CONF)
-
-install: compile copy-sources copy-images payload
-upgrade: compile copy-sources copy-images
+install: compile copy-sources copy-images
 
 uninstall:
 	$(info Uninstall)
 	@rm -f -r $(EMACS_DIR) -v
-	@rm -f -r $(INST_IMAGES_DIR) -v
 
 clean:
 	$(info Removing)
