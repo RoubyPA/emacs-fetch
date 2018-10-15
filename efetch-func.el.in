@@ -92,26 +92,18 @@ output."
    ;; Default
    (t "Unknown OS")))
 
-(defun efetch ()
-  "Display emacs and system configuration in new buffer."
-  (interactive)
-  (let* ((buff  (generate-new-buffer "efetch"))
-         (data  `(("OS"     . ,(ef-distro))
-                  ("Host"   . ,(system-name))
-                  ("Uptime" . ,(ef-uptime))
-                  ("Kernel" . ,(ef-uname "-s"))
-                  ("Kernel version" . ,(ef-uname "-r"))
-                  ("Arch"   . ,(ef-uname "-m"))
-                  ("CPU"    . ,(ef-cpu-model))
-                  ("Load average" . ,(ef-load-avg))
-                  ("Shell"  . ,(ef-shell))
-                  ("Emacs"  . ,(ef-emacs-info))
-                  ("Emacs uptime" . ,(emacs-uptime)))))
-    ;; Switch to new buffer and active efetch-mode
-    (set-buffer buff)
-    (switch-to-buffer buff)
-    (efetch-mode)
-
+(defun efetch-write-data ()
+  (let ((data  `(("OS"     . ,(ef-distro))
+                 ("Host"   . ,(system-name))
+                 ("Uptime" . ,(ef-uptime))
+                 ("Kernel" . ,(ef-uname "-s"))
+                 ("Kernel version" . ,(ef-uname "-r"))
+                 ("Arch"   . ,(ef-uname "-m"))
+                 ("CPU"    . ,(ef-cpu-model))
+                 ("Load average" . ,(ef-load-avg))
+                 ("Shell"  . ,(ef-shell))
+                 ("Emacs"  . ,(ef-emacs-info))
+                 ("Emacs uptime" . ,(emacs-uptime)))))
     ;; Insert data
     (insert "+++ Efetch +++\n")
 
@@ -119,10 +111,37 @@ output."
      (create-image (concat ef-images-dir "/default.png")))
     (insert "\n")
 
-    (mapc 'ef-display data)
+    (mapc 'ef-display data)))
+
+(defun efetch ()
+  "Display emacs and system configuration in new buffer."
+  (interactive)
+  (let* ((buff  (generate-new-buffer "efetch")))
+    ;; Switch to new buffer and active efetch-mode
+    (set-buffer buff)
+    (switch-to-buffer buff)
+    (efetch-mode)
+
+    ;; Insert data
+    (efetch-write-data)
 
     ;; Set buffer to read only mode
-    (read-only-mode)))
+    (read-only-mode t)))
+
+(defun efetch-update ()
+  "Update current efetch buffer."
+  (interactive)
+  ;; Set buffer writable
+  (if (not (string-equal mode-name "efetch"))
+      (progn (message "efetch: Not valide buffer !")
+             nil)
+    (progn
+      (read-only-mode 0)
+      (erase-buffer)
+      ;; Insert data
+      (efetch-write-data)
+      ;; Set buffer to read only mode
+      (read-only-mode t))))
 
 (provide 'efetch-func)
 ;;; efetch-func.el ends here
