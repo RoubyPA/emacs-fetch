@@ -20,6 +20,8 @@ M-x efetch-update
 
 * Installation
 
+** With makefile
+
 Firstly clone the repository and use =make install=. By default efetch
 will be install in =~/.emacs.d/efetch-mode/= directory.
 
@@ -33,5 +35,12 @@ Secondly you can add the loading code in your =~/.emacs=.
 
 #+BEGIN_SRC emacs-lisp
 (load "~/.emacs.d/efetch-mode/efetch-mode.elc")
-(load "~/.emacs.d/efetch-mode/efetch-func.elc"))
 #+END_SRC
+
+** With GNU Guix
+
+You can install efetch with local guix package.
+
+#+BEGIN_EXAMPLE
+guix package -f guix.scm
+#+END_EXAMPLE
