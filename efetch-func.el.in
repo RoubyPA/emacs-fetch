@@ -27,6 +27,8 @@
 (defvar ef-images-dir "@INST_IMAGES_DIR@")
 (defvar ef-default-spaces 15)
 (defvar ef-default-separator " : ")
+(defvar ef-distro-image '(("GuixSD" . "guix.png")
+                          (t . "default.png")))
 
 (defun ef-add-spaces (str n)
   (if (= n 0)
@@ -92,6 +94,17 @@ output."
    ;; Default
    (t "Unknown OS")))
 
+(defun ef-insert-os-image (os)
+  "Insert image corresponding to OS distribution. If OS don't
+have images, use default images."
+  (let* ((distro (car (split-string os " ")))
+         (search (assoc distro ef-distro-image))
+         (image  (if search
+                     (cdr search)
+                   (cdr (assoc t ef-distro-image)))))
+    (insert-image
+     (create-image (concat ef-images-dir image)))))
+
 (defun efetch-write-data ()
   (let ((data  `(("OS"     . ,(ef-distro))
                  ("Host"   . ,(system-name))
@@ -104,13 +117,12 @@ output."
                  ("Shell"  . ,(ef-shell))
                  ("Emacs"  . ,(ef-emacs-info))
                  ("Emacs uptime" . ,(emacs-uptime)))))
-    ;; Insert data
+    ;; Insert Header
     (insert "+++ Efetch +++\n")
+    (ef-insert-image (ef-distro))
+    (insert "\n")                       ;New line after image
 
-    (insert-image
-     (create-image (concat ef-images-dir "/default.png")))
-    (insert "\n")
-
+    ;; Insert data
     (mapc 'ef-display data)))
 
 (defun efetch ()
