@@ -49,11 +49,13 @@ copy-sources:
 	@mkdir $(EMACS_DIR) -p
 	@cp *.el  $(EMACS_DIR) -v
 	@cp *.elc $(EMACS_DIR) -v
+	@cp LICENSE $(EMACS_DIR) -v
 
 copy-images:
 	$(info Install      *.png)
 	@mkdir $(INST_IMAGES_DIR) -p
 	@cp ./$(IMAGES_DIR)*.png $(INST_IMAGES_DIR) -v
+	@cp ./$(IMAGES_DIR)COPYRIGHT $(INST_IMAGES_DIR) -v
 
 install: compile copy-sources copy-images
 
