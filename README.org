@@ -5,26 +5,33 @@
 
 * Usage
 
+Create new efetch buffer.
+
 #+BEGIN_EXAMPLE
 M-x efetch
 #+END_EXAMPLE
 
-* Install
-
-Efetch use makefile for installation.
+You can update the current eftech buffer with =C-c C-c= or with
+function =efetch-update=.
 
 #+BEGIN_EXAMPLE
+M-x efetch-update
+#+END_EXAMPLE
+
+* Installation
+
+Firstly clone the repository and use =make install=. By default efetch
+will be install in =~/.emacs.d/efetch-mode/= directory.
+
+#+BEGIN_EXAMPLE
+git clone https://framagit.org/prouby/emacs-fetch
+cd emacs-fetch
 make install
 #+END_EXAMPLE
 
-** Upgrade
+Secondly you can add the loading code in your =~/.emacs=.
 
-#+BEGIN_EXAMPLE
-make upgrade
-#+END_EXAMPLE
-
-** Uninstall
-
-#+BEGIN_EXAMPLE
-make uninstall
-#+END_EXAMPLE
+#+BEGIN_SRC emacs-lisp
+(load "~/.emacs.d/efetch-mode/efetch-mode.elc")
+(load "~/.emacs.d/efetch-mode/efetch-func.elc"))
+#+END_SRC
