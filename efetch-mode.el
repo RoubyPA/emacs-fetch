@@ -82,7 +82,21 @@ output as string."
 
 (defun ef-uptime ()
   "Return system uptime."
-  (nth 2 (split-string (shell-command-to-string "uptime"))))
+  (let* ((time (string-to-number
+                (car (split-string (shell-command-to-string
+                                    "cat /proc/uptime")))))
+         (time-format (cond
+                       ((< time 86400)
+                        ;;Less than 1 day
+                        "%h hours, %m minutes, %s seconds")
+                       ((< time 31536000)
+                        ;;Less than 1 year
+                        (concat "%d days, %h hours, %m minutes, "
+                                "%s seconds"))
+                       (t
+                        (concat "%y years, %d days, %h hours, "
+                                "%m minutes, %s seconds")))))
+    (format-seconds time-format time)))
 
 (defun ef-load-avg ()
   "Return current system load average as string format."
