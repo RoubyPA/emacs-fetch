@@ -44,11 +44,14 @@ Each elements is associated list like :
 The tag equal at t value is the default images when OS is unknown
 or it doesn't have available image.")
 
-(defun ef-add-spaces (str n)
+(defun ef-add-spaces (str n &optional sep)
   "Add N spaces to STR."
+  (when (equal sep nil)
+    (setq sep " "))
   (if (= n 0)
       str
-    (ef-add-spaces (concat str " ") (- n 1))))
+    (ef-add-spaces (concat str sep)
+                   (- n 1) sep)))
 
 (defun ef-display (l)
   "Display new line in eftech buffer.
@@ -144,6 +147,16 @@ images."
     (insert-image
      (create-image (concat ef-images-dir image)))))
 
+(defun ef-login-host (&optional addline)
+  "Return <login>@<host>. ADDLINE add new line separator like
+  \"-------\n\"."
+  (let ((login (format "%s@%s\n" (user-login-name) (system-name))))
+    (if (equal addline t)
+        (setq addline (concat (ef-add-spaces "" (- (length login) 1) "-")
+                              "\n"))
+      (setq addline ""))
+    (concat login addline)))
+
 (defun efetch-write-data ()
   "Insert efetch header and insert system information in current
 buffer."
@@ -162,7 +175,8 @@ buffer."
     (insert "+++ Efetch +++\n")
     (ef-insert-os-image (ef-distro))
     (insert "\n")                       ;New line after image
-
+    (insert (ef-login-host t))
+    
     ;; Insert data
     (mapc 'ef-display data)))
 
@@ -200,7 +214,8 @@ buffer."
 ;;; Highlights
 (defvar efetch-highlights
   '(("\\(.*\\) :" . font-lock-function-name-face)
-    ("Efetch"     . font-lock-constant-face))
+    ("Efetch"     . font-lock-constant-face)
+    ("\\(.*\\)@\\(.*\\)"  . font-lock-type-face))
   "Eftech-mode highlights.")
 
 ;;; Keymap
