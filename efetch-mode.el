@@ -24,37 +24,56 @@
 
 ;;; Code:
 
-(defvar ef-images-dir "~/.emacs.d/efetch-mode/images/")
-(defvar ef-default-spaces 15)
-(defvar ef-default-separator " : ")
+(defvar ef-images-dir
+  "~/.emacs.d/efetch-mode/images/"
+  "Efetch images directory.")
+
+(defvar ef-margin 15
+  "Eftech margin between start of line and data.")
+
+(defvar ef-separator " : "
+  "Efetch separator in string.")
+
 (defvar ef-distro-image '(("GuixSD" . "guix.png")
-                          (t . "default.png")))
+                          (t . "default.png"))
+  "List of associated list of available image corresponding to OS.
+
+Each elements is associated list like :
+  (\"OS name\" . \"image.png\")
+
+The tag equal at t value is the default images when OS is unknown
+or it doesn't have available image.")
 
 (defun ef-add-spaces (str n)
+  "Add N spaces to STR."
   (if (= n 0)
       str
     (ef-add-spaces (concat str " ") (- n 1))))
 
 (defun ef-display (l)
-  "Display new line in eftech buffer."
+  "Display new line in eftech buffer.
+
+L is a list like (\"key\" . \"value\")."
   (insert
-   (concat (ef-add-spaces (car l) (- ef-default-spaces (length (car l))))
-           ef-default-separator (cdr l) "\n")))
+   (concat (ef-add-spaces (car l) (- ef-margin (length (car l))))
+           ef-separator (cdr l) "\n")))
 
 (defun ef-emacs-info ()
+  "Return emacs information as string."
   (let ((emacs-info (split-string (emacs-version))))
     (concat (nth 0 emacs-info) " "
             (nth 1 emacs-info) " "
             (nth 2 emacs-info))))
 
 (defun ef-uname (opt)
-  "Exec uname with 'opt' and return the first line of command
-output."
+  "Exec uname with OPT and return the first line of command
+output as string."
   (car (split-string
         (shell-command-to-string (format "uname %s" opt))
         "\n")))
 
 (defun ef-cpu-model ()
+  "Return cpu model as string."
   (let ((cmd "cat /proc/cpuinfo |grep 'model name'"))
     (car (cdr (split-string
                (car (split-string (shell-command-to-string cmd)
@@ -62,9 +81,11 @@ output."
                ": ")))))
 
 (defun ef-uptime ()
+  "Return system uptime."
   (nth 2 (split-string (shell-command-to-string "uptime"))))
 
 (defun ef-load-avg ()
+  "Return current system load average as string format."
   (with-temp-buffer
     (insert-file-contents "/proc/loadavg")
     (let* ((line (buffer-substring-no-properties (line-beginning-position)
@@ -75,11 +96,14 @@ output."
               (nth 2 sline)))))
 
 (defun ef-shell ()
-  "Return shell name."
+  "Return shell name as string.
+
+This function capitalize the shell name like:
+  \"bash\" -> \"Bash\"."
   (capitalize (file-name-nondirectory (getenv "SHELL"))))
 
 (defun ef-distro ()
-  "Return operation system name and version."
+  "Return operation system name and version as string."
   (cond
    ;; lsb_release
    ((eq (shell-command "type -p lsb_release") 0)
@@ -95,8 +119,9 @@ output."
    (t "Unknown OS")))
 
 (defun ef-insert-os-image (os)
-  "Insert image corresponding to OS distribution. If OS don't
-have images, use default images."
+  "Insert image corresponding to OS distribution with
+`ef-distro-image' variable. If OS don't have images, use default
+images."
   (let* ((distro (car (split-string os " ")))
          (search (assoc distro ef-distro-image))
          (image  (if search
@@ -106,6 +131,8 @@ have images, use default images."
      (create-image (concat ef-images-dir image)))))
 
 (defun efetch-write-data ()
+  "Insert efetch header and insert system information in current
+buffer."
   (let ((data  `(("OS"     . ,(ef-distro))
                  ("Host"   . ,(system-name))
                  ("Uptime" . ,(ef-uptime))
@@ -127,7 +154,7 @@ have images, use default images."
 
 ;;;###autoload
 (defun efetch ()
-  "Display emacs and system configuration in new buffer."
+  "Create new `efetch' buffer and write data."
   (interactive)
   (let* ((buff  (generate-new-buffer "efetch")))
     ;; Switch to new buffer and active efetch-mode
@@ -142,7 +169,7 @@ have images, use default images."
     (read-only-mode t)))
 
 (defun efetch-update ()
-  "Update current efetch buffer."
+  "Update current `efetch' buffer."
   (interactive)
   ;; Set buffer writable
   (if (not (string-equal mode-name "efetch"))
@@ -159,10 +186,11 @@ have images, use default images."
 ;;; Highlights
 (defvar efetch-highlights
   '(("\\(.*\\) :" . font-lock-function-name-face)
-    ("Efetch"     . font-lock-constant-face)))
+    ("Efetch"     . font-lock-constant-face))
+  "Eftech-mode highlights.")
 
 ;;; Keymap
-(defvar efetch-mode-map nil "Keymap for `efetch-mode-map'")
+(defvar efetch-mode-map nil "Keymap for `efetch-mode'")
 (setq efetch-mode-map (make-sparse-keymap))
 (define-key efetch-mode-map (kbd "C-c C-c") 'efetch-update)
 
