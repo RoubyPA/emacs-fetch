@@ -1,8 +1,10 @@
 ;;; efetch-mode.el --- Efetch major mode.            -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2018  Pierre-Antoine Rouby
+;; Copyright (C) 2018  David Tabarie
 
 ;; Author: Pierre-Antoine Rouby <contact@parouby.fr>
+;; Author: David Tabarie <david.tabarie@gmail.com>
 ;; Keywords: lisp, extensions
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -36,13 +38,13 @@
 
 (defvar ef-distro-image '(("GuixSD" . "guix.png")
                           (t . "default.png"))
-  "List of associated list of available image corresponding to OS.
+  "Used to associate each OS to the corresponding image.
 
-Each elements is associated list like :
+Each elements is an associated list, like :
   (\"OS name\" . \"image.png\")
 
-The tag equal at t value is the default images when OS is unknown
-or it doesn't have available image.")
+The t value is used when no corresponding image is found, or when
+the OS is unknown.")
 
 (defun ef-get-first-line (str)
   "Return first line of STR."
@@ -66,21 +68,21 @@ L is a list like (\"key\" . \"value\")."
            ef-separator (cdr l) "\n")))
 
 (defun ef-emacs-info ()
-  "Return emacs information as string."
+  "Return emacs informations as a string."
   (let ((emacs-info (split-string (emacs-version))))
     (concat (nth 0 emacs-info) " "
             (nth 1 emacs-info) " "
             (nth 2 emacs-info))))
 
 (defun ef-uname (opt)
-  "Exec uname with OPT and return the first line of command
-output as string."
+  "Exec uname with OPT and return the first line of the output as
+a string."
   (car (split-string
         (shell-command-to-string (format "uname %s" opt))
         "\n")))
 
 (defun ef-cpu-model ()
-  "Return cpu model as string."
+  "Return the cpu model as a string."
   (let ((cmd "cat /proc/cpuinfo |grep 'model name'"))
     (car (cdr (split-string
                (car (split-string (shell-command-to-string cmd)
@@ -106,7 +108,7 @@ output as string."
     (format-seconds time-format time)))
 
 (defun ef-load-avg ()
-  "Return current system load average as string format."
+  "Return the average system load as string format."
   (with-temp-buffer
     (insert-file-contents "/proc/loadavg")
     (let* ((line (buffer-substring-no-properties (line-beginning-position)
@@ -117,14 +119,14 @@ output as string."
               (nth 2 sline)))))
 
 (defun ef-shell ()
-  "Return shell name as string.
+  "Return shell name as a string.
 
-This function capitalize the shell name like:
+This function make the first letter of the shell name uppercase:
   \"bash\" -> \"Bash\"."
   (capitalize (file-name-nondirectory (getenv "SHELL"))))
 
 (defun ef-distro ()
-  "Return operation system name and version as string."
+  "Return operating system name and version as string."
   (cond
    ;; lsb_release
    ((eq (shell-command "type -p lsb_release") 0)
@@ -140,9 +142,8 @@ This function capitalize the shell name like:
    (t "Unknown OS")))
 
 (defun ef-insert-os-image (os)
-  "Insert image corresponding to OS distribution with
-`ef-distro-image' variable. If OS don't have images, use default
-images."
+  "Insert image corresponding to OS distribution with the
+  `ef-distro-image' variable. If no image is found, use default one."
   (let* ((distro (car (split-string os " ")))
          (search (assoc distro ef-distro-image))
          (image  (if search
@@ -162,8 +163,7 @@ images."
     (concat login addline)))
 
 (defun efetch-write-data ()
-  "Insert efetch header and insert system information in current
-buffer."
+  "Insert efetch header and system information in current buffer."
   (let ((data  `(("OS"     . ,(ef-distro))
                  ("Host"   . ,(system-name))
                  ("Uptime" . ,(ef-uptime))
