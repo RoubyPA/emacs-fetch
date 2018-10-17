@@ -44,6 +44,10 @@ Each elements is associated list like :
 The tag equal at t value is the default images when OS is unknown
 or it doesn't have available image.")
 
+(defun ef-get-first-line (str)
+  "Return first line of STR."
+  (car (split-string str "\n")))
+
 (defun ef-add-spaces (str n &optional sep)
   "Add N spaces to STR."
   (when (equal sep nil)
@@ -124,7 +128,7 @@ This function capitalize the shell name like:
   (cond
    ;; lsb_release
    ((eq (shell-command "type -p lsb_release") 0)
-    (shell-command-to-string "lsb_release -sd"))
+    (ef-get-first-line (shell-command-to-string "lsb_release -sd")))
    ;; Guix
    ((eq (shell-command "type -p guix") 0)
     (concat "GuixSD "
@@ -176,7 +180,7 @@ buffer."
     (ef-insert-os-image (ef-distro))
     (insert "\n")                       ;New line after image
     (insert (ef-login-host t))
-    
+
     ;; Insert data
     (mapc 'ef-display data)))
 
