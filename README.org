@@ -18,6 +18,17 @@ function =efetch-update=.
 M-x efetch-update
 #+END_EXAMPLE
 
+* Configuration
+
+** Customize distro image
+
+To use customized distro image add the following code in your
+=~/.emacs= and change =<image_path>= with the path to image file.
+
+#+BEGIN_SRC emacs-lisp
+(setq ef-custom-image "<image_path>")
+#+END_SRC
+
 * Installation
 
 ** With makefile

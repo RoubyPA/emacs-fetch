@@ -46,6 +46,10 @@ Each elements is an associated list, like :
 The t value is used when no corresponding image is found, or when
 the OS is unknown.")
 
+(defvar ef-custom-image ""
+  "Path of custom image to replace distro image. By default this
+variable is empty.")
+
 (defun ef-get-first-line (str)
   "Return first line of STR."
   (car (split-string str "\n")))
@@ -143,14 +147,18 @@ This function make the first letter of the shell name uppercase:
 
 (defun ef-insert-os-image (os)
   "Insert image corresponding to OS distribution with the
-  `ef-distro-image' variable. If no image is found, use default one."
-  (let* ((distro (car (split-string os " ")))
-         (search (assoc distro ef-distro-image))
-         (image  (if search
-                     (cdr search)
-                   (cdr (assoc t ef-distro-image)))))
+`ef-distro-image' variable. If no image is found, use default
+one."
+  (if (string-empty-p ef-custom-image)
+      (let* ((distro (car (split-string os " ")))
+             (search (assoc distro ef-distro-image))
+             (image  (if search
+                         (cdr search)
+                       (cdr (assoc t ef-distro-image)))))
+        (insert-image
+         (create-image (concat ef-images-dir image))))
     (insert-image
-     (create-image (concat ef-images-dir image)))))
+     (create-image ef-custom-image))))
 
 (defun ef-login-host (&optional addline)
   "Return <login>@<host>. ADDLINE add new line separator like
