@@ -136,8 +136,10 @@ This function make the first letter of the shell name uppercase:
   (cond
    ;; Systemd distributions
    ((eq (file-exists-p "/etc/os-release") t)
-    (cadr (split-string (shell-command-to-string "cat /etc/os-release |grep \
-PRETTY_NAME") "\"")))
+    (cadr (split-string
+           (shell-command-to-string
+            "cat /etc/os-release |grep PRETTY_NAME")
+           "\"")))
    ;; lsb_release
    ((eq (shell-command "type -p lsb_release") 0)
     (ef-get-first-line (shell-command-to-string "lsb_release -sd")))
@@ -155,7 +157,7 @@ PRETTY_NAME") "\"")))
   "Insert image corresponding to OS distribution with the
 `ef-distro-image' variable. If no image is found, use default
 one."
-  (if (string-empty-p ef-custom-image)
+  (if (equal ef-custom-image "")
       (let* ((distro (car (split-string os " ")))
              (search (assoc distro ef-distro-image))
              (image  (if search
