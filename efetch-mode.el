@@ -128,6 +128,10 @@ This function make the first letter of the shell name uppercase:
 (defun ef-distro ()
   "Return operating system name and version as string."
   (cond
+   ;; Systemd distributions
+   ((eq (file-exists-p "/etc/os-release") t)
+    (cadr (split-string (shell-command-to-string "cat /etc/os-release |grep \
+PRETTY_NAME") "\"")))
    ;; lsb_release
    ((eq (shell-command "type -p lsb_release") 0)
     (ef-get-first-line (shell-command-to-string "lsb_release -sd")))
