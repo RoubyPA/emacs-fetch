@@ -1,0 +1,24 @@
+#+title: TODO list
+#+startup: indent
+
+* Data type
+
+** GPU model
+
+** Model of computer
+
+** Desktop Environment
+
+** Display resolution
+
+** Pretty memory usage
+
+** Terminal
+
+** Disk space
+
+** Package installed
+
+** Multiple CPU/GPU
+
+* Asciiart
