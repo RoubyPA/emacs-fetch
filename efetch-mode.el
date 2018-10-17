@@ -37,6 +37,7 @@
   "Efetch separator in string.")
 
 (defvar ef-distro-image '(("GuixSD" . "guix.png")
+                          ("Debian" . "debian.png")
                           (t . "default.png"))
   "Used to associate each OS to the corresponding image.
 
