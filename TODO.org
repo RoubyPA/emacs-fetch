@@ -3,10 +3,6 @@
 
 * Data type
 
-** GPU model
-
-** Model of computer
-
 ** Desktop Environment
 
 ** Display resolution
@@ -16,9 +12,5 @@
 ** Terminal
 
 ** Disk space
-
-** Package installed
-
-** Multiple CPU/GPU
 
 * Asciiart
