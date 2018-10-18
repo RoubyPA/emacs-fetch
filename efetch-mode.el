@@ -102,6 +102,16 @@ a string."
                                   "\n"))
                ": ")))))
 
+(defun ef-computer ()
+  "Return the computer model as a string."
+  (let ((family (ef-get-first-line
+                 (shell-command-to-string
+                  "cat /sys/devices/virtual/dmi/id/product_family")))
+        (name (ef-get-first-line
+                 (shell-command-to-string
+                  "cat /sys/devices/virtual/dmi/id/product_name"))))
+    (format "%s %s" family name)))
+
 (defun ef-uptime ()
   "Return system uptime."
   (let* ((time (string-to-number
@@ -188,7 +198,7 @@ one."
 (defun efetch-write-data ()
   "Insert efetch header and system information in current buffer."
   (let ((data  `(("OS"     . ,(ef-distro))
-                 ("Host"   . ,(system-name))
+                 ("Host"   . ,(ef-computer))
                  ("Uptime" . ,(ef-uptime))
                  ("Kernel" . ,(ef-uname "-s"))
                  ("Kernel version" . ,(ef-uname "-r"))
