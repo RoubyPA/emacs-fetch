@@ -38,6 +38,15 @@ file.
 (setq ef-additional-data '(("Test" . "True"))
 #+END_SRC
 
+** Disable time expansive function
+
+You can disable time expansive function with =ef-fast-display=
+variable.
+
+#+BEGIN_SRC emacs-lisp
+(setq ef-fast-display t)
+#+END_SRC
+
 * Installation
 
 ** With makefile
