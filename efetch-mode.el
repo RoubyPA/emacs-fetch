@@ -59,6 +59,9 @@ Data list is a list of associated list, like:
   '((\"name\"  . \"value\")
     (\"name2\" . \"value2)")
 
+(defvar ef-fast-display nil
+  "When is t disable time expensive function.")
+
 (defun ef-get-first-line (str)
   "Return first line of STR."
   (car (split-string str "\n")))
@@ -208,6 +211,24 @@ one."
     (insert-image
      (create-image ef-custom-image))))
 
+(defun ef-installed-package (os)
+  "Return package number as a string."
+  (cond
+   ;; Guix
+   ((string-match "Guix" os)
+    (let ((installed (ef-get-first-line
+                      (shell-command-to-string
+                       "guix package --list-installed|wc -l")))
+          (available (if (eq ef-fast-display nil)
+                         (concat
+                          " / "
+                          (ef-get-first-line
+                           (shell-command-to-string
+                            "guix package --list-available|wc -l")))
+                       "")))
+      (concat installed available " (Guix)")))
+   (t "")))
+
 (defun ef-login-host (&optional addline)
   "Return <login>@<host>. ADDLINE add new line separator like
   \"-------\n\"."
@@ -220,25 +241,29 @@ one."
 
 (defun efetch-write-data ()
   "Insert efetch header and system information in current buffer."
-  (let ((data  `(("OS"     . ,(ef-distro))
-                 ("Host"   . ,(ef-computer))
-                 ("Uptime" . ,(ef-uptime))
-                 ("Kernel" . ,(ef-uname "-s"))
-                 ("Kernel version" . ,(ef-uname "-r"))
-                 ("Arch"   . ,(ef-uname "-m"))
-                 ("CPU"    . ,(ef-cpu-model))
-                 ,(if (not (equal (ef-cpu-model 1) ""))
-                      `("CPU"    . ,(ef-cpu-model 1)))
-                 ("GPU"    . ,(ef-gpu-model))
-                 ,(if (not (equal (ef-gpu-model 1) ""))
-                      `("GPU"    . ,(ef-gpu-model 1)))
-                 ("Load average" . ,(ef-load-avg))
-                 ("Shell"  . ,(ef-shell))
-                 ("Emacs"  . ,(ef-emacs-info))
-                 ("Emacs uptime" . ,(emacs-uptime)))))
+  (let* ((os       (ef-distro))
+         (packages (ef-installed-package os))
+         (data  `(("OS"     . ,os)
+                  ("Host"   . ,(ef-computer))
+                  ,(if (not (eq packages ""))
+                       `("Packages" . ,packages))
+                  ("Uptime" . ,(ef-uptime))
+                  ("Kernel" . ,(ef-uname "-s"))
+                  ("Kernel version" . ,(ef-uname "-r"))
+                  ("Arch"   . ,(ef-uname "-m"))
+                  ("CPU"    . ,(ef-cpu-model))
+                  ,(if (not (equal (ef-cpu-model 1) ""))
+                       `("CPU" . ,(ef-cpu-model 1)))
+                  ("GPU"    . ,(ef-gpu-model))
+                  ,(if (not (equal (ef-gpu-model 1) ""))
+                       `("GPU" . ,(ef-gpu-model 1)))
+                  ("Load average" . ,(ef-load-avg))
+                  ("Shell"  . ,(ef-shell))
+                  ("Emacs"  . ,(ef-emacs-info))
+                  ("Emacs uptime" . ,(emacs-uptime)))))
     ;; Insert Header
     (insert "+++ Efetch +++\n")
-    (ef-insert-os-image (ef-distro))
+    (ef-insert-os-image os)
     (insert "\n")                       ;New line after image
     (insert (ef-login-host t))
 
