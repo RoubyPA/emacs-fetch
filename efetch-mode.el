@@ -130,13 +130,19 @@ a string."
 
 (defun ef-computer ()
   "Return the computer model as a string."
-  (let ((family (ef-get-first-line
-                 (shell-command-to-string
-                  "cat /sys/devices/virtual/dmi/id/product_family")))
-        (name (ef-get-first-line
-                 (shell-command-to-string
-                  "cat /sys/devices/virtual/dmi/id/product_name"))))
-    (format "%s %s" family name)))
+  (let* ((file-family "/sys/devices/virtual/dmi/id/product_family")
+         (file-name   "/sys/devices/virtual/dmi/id/product_name")
+         (family (if (file-exists-p file-family)
+                     (ef-get-first-line
+                      (shell-command-to-string
+                       (concat "cat " file-family)))
+                   ""))
+         (name (if (file-exists-p file-name)
+                     (ef-get-first-line
+                      (shell-command-to-string
+                       (concat "cat " file-name)))
+                   "")))
+    (format "%s %s" name family)))
 
 (defun ef-uptime ()
   "Return system uptime."
