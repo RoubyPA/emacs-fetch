@@ -214,6 +214,12 @@ one."
 (defun ef-installed-package (os)
   "Return package number as a string."
   (cond
+   ;; Dpkg
+   ((eq (shell-command "type -p dpkg") 0)
+    (concat (ef-get-first-line
+             (shell-command-to-string
+              "dpkg -l|wc -l"))
+            " (Dpkg)"))
    ;; Guix
    ((string-match "Guix" os)
     (let ((installed (ef-get-first-line
