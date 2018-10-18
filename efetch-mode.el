@@ -96,13 +96,18 @@ a string."
         (shell-command-to-string (format "uname %s" opt))
         "\n")))
 
-(defun ef-cpu-model ()
-  "Return the cpu model as a string."
-  (let ((cmd "cat /proc/cpuinfo |grep 'model name'"))
-    (car (cdr (split-string
-               (car (split-string (shell-command-to-string cmd)
-                                  "\n"))
-               ": ")))))
+(defun ef-cpu-model (&optional n)
+  "Return the cpu model as a string. N is the CPU index (start to
+0)."
+  (when (eq n nil)
+    (setq n 0))
+
+  (let* ((cmd "cat /proc/cpuinfo |grep 'model name'|uniq")
+         (cpus (split-string (shell-command-to-string cmd) "\n"))
+         (cpu (nth n cpus)))
+    (if (string-equal cpu "")
+        cpu
+      (cadr (split-string cpu ": ")))))
 
 (defun ef-gpu-model (&optional n)
   "Return the gpu model as a string. N is the GPU index (start to
@@ -222,6 +227,8 @@ one."
                  ("Kernel version" . ,(ef-uname "-r"))
                  ("Arch"   . ,(ef-uname "-m"))
                  ("CPU"    . ,(ef-cpu-model))
+                 ,(if (not (equal (ef-cpu-model 1) ""))
+                      `("CPU"    . ,(ef-cpu-model 1)))
                  ("GPU"    . ,(ef-gpu-model))
                  ,(if (not (equal (ef-gpu-model 1) ""))
                       `("GPU"    . ,(ef-gpu-model 1)))
