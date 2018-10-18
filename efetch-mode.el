@@ -26,6 +26,9 @@
 
 ;;; Code:
 
+(defconst efetch-version "0.0.3"
+  "Current efetch version.")
+
 (defvar ef-images-dir
   "~/.emacs.d/efetch-mode/images/"
   "Efetch images directory.")
