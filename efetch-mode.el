@@ -76,9 +76,11 @@ Data list is a list of associated list, like:
   "Display new line in eftech buffer.
 
 L is a list like (\"key\" . \"value\")."
-  (insert
-   (concat (ef-add-spaces (car l) (- ef-margin (length (car l))))
-           ef-separator (cdr l) "\n")))
+  (unless (or (equal l '())
+              (equal l nil))
+    (insert
+     (concat (ef-add-spaces (car l) (- ef-margin (length (car l))))
+             ef-separator (cdr l) "\n"))))
 
 (defun ef-emacs-info ()
   "Return emacs informations as a string."
@@ -101,6 +103,22 @@ a string."
                (car (split-string (shell-command-to-string cmd)
                                   "\n"))
                ": ")))))
+
+(defun ef-gpu-model (&optional n)
+  "Return the gpu model as a string. N is the GPU index (start to
+0)."
+  (when (equal n nil)
+    (setq n 0))
+
+  (let* ((cmd "lspci -mm |grep 'VGA'")
+         (lines (split-string (shell-command-to-string cmd) "\n"))
+         (line (nth n lines)))
+    (if (string-equal line "")
+        line
+      (let* ((gpu (split-string line "\""))
+             (corp (car (split-string (nth 3 gpu) " ")))
+             (model (nth 5 gpu)))
+        (format "%s %s" corp model)))))
 
 (defun ef-computer ()
   "Return the computer model as a string."
@@ -204,6 +222,9 @@ one."
                  ("Kernel version" . ,(ef-uname "-r"))
                  ("Arch"   . ,(ef-uname "-m"))
                  ("CPU"    . ,(ef-cpu-model))
+                 ("GPU"    . ,(ef-gpu-model))
+                 ,(if (not (equal (ef-gpu-model 1) ""))
+                      `("GPU"    . ,(ef-gpu-model 1)))
                  ("Load average" . ,(ef-load-avg))
                  ("Shell"  . ,(ef-shell))
                  ("Emacs"  . ,(ef-emacs-info))
