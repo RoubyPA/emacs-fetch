@@ -29,6 +29,15 @@ To use customized distro image add the following code in your
 (setq ef-custom-image "<image_path>")
 #+END_SRC
 
+** Customize display data
+
+To add data set the =ef-additional-data= variable in your =~/.emacs=
+file.
+
+#+BEGIN_SRC emacs-lisp
+(setq ef-additional-data '(("Test" . "True"))
+#+END_SRC
+
 * Installation
 
 ** With makefile

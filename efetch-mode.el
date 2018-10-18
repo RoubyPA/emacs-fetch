@@ -52,6 +52,13 @@ the OS is unknown.")
   "Path of custom image to replace distro image. By default this
 variable is empty.")
 
+(defvar ef-additional-data '()
+  "Additional data list for efetch buffer.
+
+Data list is a list of associated list, like:
+  '((\"name\"  . \"value\")
+    (\"name2\" . \"value2)")
+
 (defun ef-get-first-line (str)
   "Return first line of STR."
   (car (split-string str "\n")))
@@ -198,7 +205,8 @@ one."
     (insert (ef-login-host t))
 
     ;; Insert data
-    (mapc 'ef-display data)))
+    (mapc 'ef-display data)
+    (mapc 'ef-display ef-additional-data)))
 
 ;;;###autoload
 (defun efetch ()
