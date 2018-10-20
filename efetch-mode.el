@@ -42,6 +42,7 @@
 (defvar ef-distro-image '(("GuixSD" . "guix.png")
                           ("Debian" . "debian.png")
                           ("Ubuntu" . "ubuntu.png")
+                          ("Trisquel" . "trisquel.png")
                           (t . "default.png"))
   "Used to associate each OS to the corresponding image.
 
