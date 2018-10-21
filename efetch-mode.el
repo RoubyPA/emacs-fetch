@@ -188,6 +188,33 @@ This function make the first letter of the shell name uppercase:
   "Return desktop name."
   (capitalize (downcase (getenv "XDG_CURRENT_DESKTOP"))))
 
+(defun ef-resolution-select-line (line)
+  (let ((find (string-match "\\([0-9]*\\)[ ]+\\([0-9]*.[0-9]*[*]+\\)"
+                            line)))
+    (if (eq find nil)
+        nil
+      line)))
+
+(defun ef-resolution-list-of-data (line)
+  (remove "" (split-string line " ")))
+
+(defun ef-resolution-format-string (line)
+  (format "%s " (nth 0 line)))
+
+(defun ef-resolution ()
+  (if (eq (shell-command "type -p xrandr") 0)
+      (let ((data (split-string
+                   (shell-command-to-string
+                    "xrandr --nograb --current")
+                   "\n")))
+        (apply 'concat
+               (mapcar 'ef-resolution-format-string
+                       (mapcar 'ef-resolution-list-of-data
+                               (remove nil
+                                       (mapcar 'ef-resolution-select-line
+                                               data))))))
+    ""))
+
 (defun ef-distro ()
   "Return operating system name and version as string."
   (cond
@@ -279,8 +306,9 @@ one."
                        `("GPU" . ,(ef-gpu-model 1)))
                   ("Load average" . ,(ef-load-avg))
                   ("Shell"  . ,(ef-shell))
+                  ("Resolution" . ,(ef-resolution))
                   ,(if (not (equal (getenv "DISPLAY") nil))
-                       ("Desktop" . ,(ef-desktop)))
+                       `("Desktop" . ,(ef-desktop)))
                   ("Emacs"  . ,(ef-emacs-info))
                   ("Emacs uptime" . ,(emacs-uptime)))))
     ;; Insert Header
