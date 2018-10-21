@@ -184,6 +184,10 @@ This function make the first letter of the shell name uppercase:
   \"bash\" -> \"Bash\"."
   (capitalize (file-name-nondirectory (getenv "SHELL"))))
 
+(defun ef-desktop ()
+  "Return desktop name."
+  (capitalize (downcase (getenv "XDG_CURRENT_DESKTOP"))))
+
 (defun ef-distro ()
   "Return operating system name and version as string."
   (cond
@@ -275,6 +279,8 @@ one."
                        `("GPU" . ,(ef-gpu-model 1)))
                   ("Load average" . ,(ef-load-avg))
                   ("Shell"  . ,(ef-shell))
+                  ,(if (not (equal (getenv "DISPLAY") nil))
+                       ("Desktop" . ,(ef-desktop)))
                   ("Emacs"  . ,(ef-emacs-info))
                   ("Emacs uptime" . ,(emacs-uptime)))))
     ;; Insert Header
