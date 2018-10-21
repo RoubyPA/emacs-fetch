@@ -255,6 +255,12 @@ one."
 (defun ef-installed-package (os)
   "Return package number as a string."
   (cond
+   ;; RPM
+   ((eq (shell-command "type -p rpm") 0)
+    (concat (ef-get-first-line
+             (shell-command-to-string
+              "rpm -qa|wc -l"))
+            " (RPM)"))
    ;; Dpkg
    ((eq (shell-command "type -p dpkg") 0)
     (concat (ef-get-first-line
