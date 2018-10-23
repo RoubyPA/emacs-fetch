@@ -253,22 +253,23 @@ one."
      (create-image ef-custom-image))))
 
 (defun ef-installed-package (os)
-  "Return package number as a string."
+  "Return package number as a string. This function detect
+package manager with OS name."
   (cond
    ;; RPM
-   ((eq (shell-command "type -p rpm") 0)
+   ((string-match "Fedora\\|Red Hat" os)
     (concat (ef-get-first-line
              (shell-command-to-string
               "rpm -qa|wc -l"))
             " (RPM)"))
    ;; Dpkg
-   ((eq (shell-command "type -p dpkg") 0)
+   ((string-match "Debian\\|Ubuntu\\|Trisquel" os)
     (concat (ef-get-first-line
              (shell-command-to-string
               "dpkg -l|wc -l"))
             " (Dpkg)"))
    ;; Guix
-   ((string-match "Guix" os)
+   ((string-match "GuixSD" os)
     (let ((installed (ef-get-first-line
                       (shell-command-to-string
                        "guix package --list-installed|wc -l")))
