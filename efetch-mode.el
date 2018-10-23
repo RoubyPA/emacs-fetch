@@ -70,6 +70,17 @@ Data list is a list of associated list, like:
   "Return first line of STR."
   (car (split-string str "\n")))
 
+(defun ef-file-readable? (filename)
+  "Return t if FILENAME exists and user have right to read it,
+else return nil."
+  (if (file-exists-p filename)
+      (if (eq 0 (string-match "-r..r..r.."
+                             (file-attribute-modes
+                              (file-attributes filename))))
+          t
+        nil)
+    nil))
+
 (defun ef-add-spaces (str n &optional sep)
   "Add N spaces to STR."
   (when (equal sep nil)
@@ -136,12 +147,12 @@ a string."
   "Return the computer model as a string."
   (let* ((file-family "/sys/devices/virtual/dmi/id/product_family")
          (file-name   "/sys/devices/virtual/dmi/id/product_name")
-         (family (if (file-exists-p file-family)
+         (family (if (ef-file-readable? file-family)
                      (ef-get-first-line
                       (shell-command-to-string
                        (concat "cat " file-family)))
                    ""))
-         (name (if (file-exists-p file-name)
+         (name (if (ef-file-readable? file-name)
                      (ef-get-first-line
                       (shell-command-to-string
                        (concat "cat " file-name)))
@@ -219,7 +230,7 @@ This function make the first letter of the shell name uppercase:
   "Return operating system name and version as string."
   (cond
    ;; Systemd distributions
-   ((eq (file-exists-p "/etc/os-release") t)
+   ((eq (ef-file-readable? "/etc/os-release") t)
     (cadr (split-string
            (shell-command-to-string
             "cat /etc/os-release |grep PRETTY_NAME")
