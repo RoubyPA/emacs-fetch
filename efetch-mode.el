@@ -93,8 +93,12 @@ else return nil."
 (defun ef-cut-line (str)
   "If STR length if to long for display, cut the line and add
 '...'  as suffix and return this new string, else return STR."
-  (if (> (length str) 55)
-      (concat (substring str 0 55) "...")
+  (if (> (+ ef-margin (length str) (length ef-separator))
+         (window-width))
+      (concat (substring str 0 (- (window-width)
+                                  ef-margin
+                                  (* (length ef-separator) 2)))
+              "...")
     str))
 
 (defun ef-display (l)
@@ -275,8 +279,12 @@ default one."
              (image  (if search
                          (cdr search)
                        (cdr (assoc t ef-distro-image)))))
-        (insert-image
-         (create-image (concat ef-images-dir image))))
+        (let* ((img  (create-image (concat ef-images-dir image)))
+               (size (image-size img))
+               (width (car size))
+               (left-margin (floor (- (window-total-width) width) 2)))
+          (indent-to left-margin)
+          (insert-image img)))
     (insert-image
      (create-image ef-custom-image))))
 
