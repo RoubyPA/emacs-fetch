@@ -3,13 +3,11 @@
 
 * Data type
 
-** Desktop Environment
-
-** Display resolution
-
 ** Pretty memory usage
 
 ** Terminal
+
+Display terminal name, only without 'display-graphic-p'.
 
 ** Disk space
 
