@@ -75,14 +75,14 @@ Data list is a list of associated list, like:
 else return nil."
   (if (file-exists-p filename)
       (if (eq 0 (string-match "-r..r..r.."
-                             (file-attribute-modes
-                              (file-attributes filename))))
+                              (file-attribute-modes
+                               (file-attributes filename))))
           t
         nil)
     nil))
 
 (defun ef-add-spaces (str n &optional sep)
-  "Add N spaces to STR."
+  "Add N spaces to STR. You can replace spaces by SEP."
   (when (equal sep nil)
     (setq sep " "))
   (if (= n 0)
@@ -200,6 +200,7 @@ This function make the first letter of the shell name uppercase:
   (capitalize (downcase (getenv "XDG_CURRENT_DESKTOP"))))
 
 (defun ef-resolution-select-line (line)
+  "Return useful LINE if is useful or nil."
   (let ((find (string-match "\\([0-9]*\\)[ ]+\\([0-9]*.[0-9]*[*]+\\)"
                             line)))
     (if (eq find nil)
@@ -249,9 +250,10 @@ This function make the first letter of the shell name uppercase:
    (t "Unknown OS")))
 
 (defun ef-insert-os-image (os)
-  "Insert image corresponding to OS distribution with the
-`ef-distro-image' variable. If no image is found, use default
-one."
+  "If `ef-custom-image' variable is set with image path, insert
+this image, else insert image corresponding to OS distribution
+with the `ef-distro-image' variable. If no image is found, use
+default one."
   (if (equal ef-custom-image "")
       (let* ((distro (car (split-string os " ")))
              (search (assoc distro ef-distro-image))
@@ -305,16 +307,21 @@ package manager with OS name."
     (concat login addline)))
 
 (defun efetch-write-data ()
-  "Insert efetch header and system information in current buffer."
+  "Insert efetch header and system information in current
+buffer."
   (let* ((os       (ef-distro))
          (packages (ef-installed-package os))
          (data  `(("OS"     . ,os)
                   ("Host"   . ,(ef-computer))
-                  ,(if (not (eq packages ""))
-                       `("Packages" . ,packages))
                   ("Uptime" . ,(ef-uptime))
                   ("Kernel" . ,(ef-uname "-s"))
                   ("Kernel version" . ,(ef-uname "-r"))
+                  ,(if (not (eq packages ""))
+                       `("Packages" . ,packages))
+                  ,(if (not (equal (getenv "DISPLAY") nil))
+                       `("Desktop" . ,(ef-desktop)))
+                  ("Resolution" . ,(ef-resolution))
+                  ("Shell"  . ,(ef-shell))
                   ("Arch"   . ,(ef-uname "-m"))
                   ("CPU"    . ,(ef-cpu-model))
                   ,(if (not (equal (ef-cpu-model 1) ""))
@@ -323,17 +330,11 @@ package manager with OS name."
                   ,(if (not (equal (ef-gpu-model 1) ""))
                        `("GPU" . ,(ef-gpu-model 1)))
                   ("Load average" . ,(ef-load-avg))
-                  ("Shell"  . ,(ef-shell))
-                  ("Resolution" . ,(ef-resolution))
-                  ,(if (not (equal (getenv "DISPLAY") nil))
-                       `("Desktop" . ,(ef-desktop)))
                   ("Emacs"  . ,(ef-emacs-info))
                   ("Emacs uptime" . ,(emacs-uptime)))))
     ;; Insert Header
-    (insert "+++ Efetch +++\n")
     (ef-insert-os-image os)
-    (insert "\n")                       ;New line after image
-    (insert (ef-login-host t))
+    (insert "\n" (ef-login-host t))
 
     ;; Insert data
     (mapc 'ef-display data)
