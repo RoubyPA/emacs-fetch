@@ -96,9 +96,9 @@ else return nil."
 L is a list like (\"key\" . \"value\")."
   (unless (or (equal l '())
               (equal l nil))
-    (insert
-     (concat (ef-add-spaces (car l) (- ef-margin (length (car l))))
-             ef-separator (cdr l) "\n"))))
+    (insert (car l))
+    (indent-to ef-margin)
+    (insert ef-separator (cdr l) "\n")))
 
 (defun ef-emacs-info ()
   "Return emacs informations as a string."
