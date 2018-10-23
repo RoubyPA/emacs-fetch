@@ -90,6 +90,13 @@ else return nil."
     (ef-add-spaces (concat str sep)
                    (- n 1) sep)))
 
+(defun ef-cut-line (str)
+  "If STR length if to long for display, cut the line and add
+'...'  as suffix and return this new string, else return STR."
+  (if (> (length str) 55)
+      (concat (substring str 0 55) "...")
+    str))
+
 (defun ef-display (l)
   "Display new line in eftech buffer.
 
@@ -98,7 +105,8 @@ L is a list like (\"key\" . \"value\")."
               (equal l nil))
     (insert (car l))
     (indent-to ef-margin)
-    (insert ef-separator (cdr l) "\n")))
+    (insert ef-separator (ef-cut-line (cdr l))
+            "\n")))
 
 (defun ef-emacs-info ()
   "Return emacs informations as a string."
