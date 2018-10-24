@@ -346,7 +346,8 @@ buffer."
                   ("Emacs"  . ,(ef-emacs-info))
                   ("Emacs uptime" . ,(emacs-uptime)))))
     ;; Insert Header
-    (ef-insert-os-image os)
+    (if (display-graphic-p)
+        (ef-insert-os-image os))
     (insert "\n" (ef-login-host t))
 
     ;; Insert data
