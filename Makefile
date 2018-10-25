@@ -22,6 +22,9 @@ EMACS_DIR = ~/.emacs.d/efetch-mode/
 IMAGES_DIR = images/
 INST_IMAGES_DIR = $(EMACS_DIR)$(IMAGES_DIR)
 
+ASCII_DIR = ascii-arts/
+INST_ASCII_DIR = $(EMACS_DIR)$(ASCII_DIR)
+
 SOURCES = efetch-mode.el
 COMPILED_FILE += $(SOURCES:.el=.elc)
 
@@ -48,7 +51,11 @@ copy-images:
 	@cp -v ./$(IMAGES_DIR)*.png $(INST_IMAGES_DIR)
 	@cp -v ./$(IMAGES_DIR)COPYRIGHT $(INST_IMAGES_DIR)
 
-install: compile copy-sources copy-images
+copy-ascii:
+	@mkdir $(INST_ASCII_DIR) -p
+	@cp -v ./$(ASCII_DIR)* $(INST_ASCII_DIR)
+
+install: compile copy-sources copy-images copy-ascii
 
 uninstall:
 	$(info Uninstall)
