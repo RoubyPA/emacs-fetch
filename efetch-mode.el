@@ -82,9 +82,12 @@ Data list is a list of associated list, like:
 '...'  as suffix and return this new string, else return STR."
   (if (> (+ ef-margin (length str) (length ef-separator))
          (window-width))
-      (concat (substring str 0 (- (window-width)
-                                  ef-margin
-                                  (* (length ef-separator) 2)))
+      (concat (substring str 0
+                         (- (window-width)
+                            ef-margin
+                            (length ef-separator)
+                            ;; Length of "..."
+                            3))
               "...")
     str))
 
