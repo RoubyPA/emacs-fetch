@@ -43,19 +43,6 @@
 (defvar ef-separator " : "
   "Efetch separator in string.")
 
-(defvar ef-distro-image '(("GuixSD" . "guix.png")
-                          ("Debian" . "debian.png")
-                          ("Ubuntu" . "ubuntu.png")
-                          ("Trisquel" . "trisquel.png")
-                          (t . "default.png"))
-  "Used to associate each OS to the corresponding image.
-
-Each elements is an associated list, like :
-  (\"OS name\" . \"image.png\")
-
-The t value is used when no corresponding image is found, or when
-the OS is unknown.")
-
 (defvar ef-custom-image ""
   "Path of custom image to replace distro image. By default this
 variable is empty.")
@@ -271,33 +258,35 @@ This function make the first letter of the shell name uppercase:
 (defun ef-insert-os-image (os)
   "If `ef-custom-image' variable is set with image path, insert
 this image, else insert image corresponding to OS distribution
-with the `ef-distro-image' variable. If no image is found, use
-default one."
+with check of file existence. If no image is found, use
+`default.png' file."
   (if (equal ef-custom-image "")
-      (let* ((distro (car (split-string os " ")))
-             (search (assoc distro ef-distro-image))
-             (image  (if search
-                         (cdr search)
-                       (cdr (assoc t ef-distro-image)))))
-        (let* ((img  (create-image (concat ef-images-dir image)))
-               (size (image-size img))
-               (width (car size))
-               (left-margin (floor (- (window-total-width) width) 2)))
-          (indent-to left-margin)
-          (insert-image img)))
+      (let* ((distro     (car (split-string os " ")))
+             (distro-img (concat ef-images-dir distro ".png")))
+        (if (file-exists-p distro-img)
+            (let* ((img   (create-image distro-img))
+                   (size  (image-size img))
+                   (width (car size))
+                   (left-margin (floor (- (window-total-width) width) 2)))
+              (indent-to left-margin)
+              (insert-image img))
+          (insert-image (create-image (concat ef-images-dir "default.png")))))
     (insert-image
      (create-image ef-custom-image))))
 
 (defun ef-insert-os-ascii (os)
-  "Insert ascii corresponding to OS distribution with the                               `ef-distro-ascii' variable."
+  "If `ef-custom-ascii' variable is set with ascii path, insert
+this ascii-art, else insert image corresponding to OS
+distribution with check of file existence. If no ascii is found,
+use `default' file."
   (if (equal ef-custom-ascii "")
-      (let* ((distro (car (split-string os " ")))
-             (search (assoc distro ef-distro-image))
-             (image  (if search
-			 (cdr search)
-                       (cdr (assoc t ef-distro-image)))))
-	(insert-file-contents (concat ef-ascii-dir (substring image nil -4))))
+      (let* ((distro       (car (split-string os " ")))
+             (distro-ascii (concat ef-ascii-dir distro)))
+        (if (file-exists-p distro-ascii)
+            (insert-file-contents distro-ascii)
+          (insert-file-contents (concat ef-ascii-dir "default"))))
     (insert-file-contents ef-custom-ascii))
+  ;; Move cursor
   (goto-char (point-max)))
 
 (defun ef-installed-package (os)
