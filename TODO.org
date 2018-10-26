@@ -12,3 +12,5 @@ Display terminal name, only without 'display-graphic-p'.
 ** Disk space
 
 * Asciiart
+
+** Add distro ascii art
