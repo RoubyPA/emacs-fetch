@@ -33,6 +33,10 @@
   "~/.emacs.d/efetch-mode/images/"
   "Efetch images directory.")
 
+(defvar ef-ascii-dir
+  "~/.emacs.d/efetch-mode/ascii-arts/"
+  "Efetch ascii-arts directory.")
+
 (defvar ef-margin 15
   "Eftech margin between start of line and data.")
 
@@ -56,6 +60,10 @@ the OS is unknown.")
   "Path of custom image to replace distro image. By default this
 variable is empty.")
 
+(defvar ef-custom-ascii ""
+  "Path of custom ascii to replace distro image. By default this
+variable is empty.")
+
 (defvar ef-additional-data '()
   "Additional data list for efetch buffer.
 
@@ -65,6 +73,9 @@ Data list is a list of associated list, like:
 
 (defvar ef-fast-display nil
   "When is t disable time expensive function.")
+
+(defvar graphic-session (display-graphic-p)
+  "Return t when emacs is run in graphic mode.") ;
 
 (defun ef-get-first-line (str)
   "Return first line of STR."
@@ -277,6 +288,18 @@ default one."
     (insert-image
      (create-image ef-custom-image))))
 
+(defun ef-insert-os-ascii (os)
+  "Insert ascii corresponding to OS distribution with the                               `ef-distro-ascii' variable."
+  (if (equal ef-custom-ascii "")
+      (let* ((distro (car (split-string os " ")))
+             (search (assoc distro ef-distro-image))
+             (image  (if search
+			 (cdr search)
+                       (cdr (assoc t ef-distro-image)))))
+	(insert-file-contents (concat ef-ascii-dir (substring image nil -4))))
+    (insert-file-contents ef-custom-ascii))
+  (goto-char (point-max)))
+
 (defun ef-installed-package (os)
   "Return package number as a string. This function detect
 package manager with OS name."
@@ -346,8 +369,9 @@ buffer."
                   ("Emacs"  . ,(ef-emacs-info))
                   ("Emacs uptime" . ,(emacs-uptime)))))
     ;; Insert Header
-    (if (display-graphic-p)
-        (ef-insert-os-image os))
+    (if (eq graphic-session t)
+    	(ef-insert-os-image os)
+      (ef-insert-os-ascii os))
     (insert "\n" (ef-login-host t))
 
     ;; Insert data
