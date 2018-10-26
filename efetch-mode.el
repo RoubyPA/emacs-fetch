@@ -86,8 +86,8 @@ Data list is a list of associated list, like:
                          (- (window-width)
                             ef-margin
                             (length ef-separator)
-                            ;; Length of "..."
-                            3))
+                            ;; Length of "..." + 1
+                            4))
               "...")
     str))
 
