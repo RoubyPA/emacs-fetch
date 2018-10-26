@@ -32,7 +32,7 @@
                       #:recursive? #t))
   (build-system emacs-build-system)
   (arguments
-   `(#:include '("\\.el$" "^images/")
+   `(#:include '("\\.el$" "^images/" "^ascii-arts")
      #:phases
      (modify-phases %standard-phases
        (add-after 'unpack 'sed-el-in
@@ -41,7 +41,11 @@
              (("~/.emacs.d/efetch-mode/images/")
               (string-append (assoc-ref outputs "out")
                              "/share/emacs/site-lisp/guix.d/"
-                             "efetch-" ,version "/images/")))
+                             "efetch-" ,version "/images/"))
+             (("~/.emacs.d/efetch-mode/ascii-arts/")
+              (string-append (assoc-ref outputs "out")
+                             "/share/emacs/site-lisp/guix.d/"
+                             "efetch-" ,version "/ascii-arts/")))
            #t)))))
   (native-inputs `(("emacs" ,emacs-minimal)))
   (home-page "https://framagit.org/prouby/emacs-fetch")
