@@ -27,29 +27,15 @@
 
 (package
   (name "emacs-efetch")
-  (version "0.0.3")
+  (version "0.0.4")
   (source (local-file "." "efetch"
                       #:recursive? #t))
   (build-system emacs-build-system)
   (arguments
-   `(#:include '("\\.el$" "^images/" "^ascii-arts")
-     #:phases
-     (modify-phases %standard-phases
-       (add-after 'unpack 'sed-el-in
-         (lambda* (#:key outputs #:allow-other-keys)
-           (substitute* "efetch-mode.el"
-             (("~/.emacs.d/efetch-mode/images/")
-              (string-append (assoc-ref outputs "out")
-                             "/share/emacs/site-lisp/guix.d/"
-                             "efetch-" ,version "/images/"))
-             (("~/.emacs.d/efetch-mode/ascii-arts/")
-              (string-append (assoc-ref outputs "out")
-                             "/share/emacs/site-lisp/guix.d/"
-                             "efetch-" ,version "/ascii-arts/")))
-           #t)))))
+   `(#:include '("\\.el$" "^images/" "^ascii-arts/")))
   (native-inputs `(("emacs" ,emacs-minimal)))
   (home-page "https://framagit.org/prouby/emacs-fetch")
   (synopsis "Major mode to display system information")
-  (description "This Emacs packages able to display system
+  (description "This Emacs packages able to display system pieces of
 information.")
   (license license:gpl3+))

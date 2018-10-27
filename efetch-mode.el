@@ -30,11 +30,11 @@
   "Current efetch version.")
 
 (defvar ef-images-dir
-  "~/.emacs.d/efetch-mode/images/"
+  (concat (file-name-directory load-file-name) "images/")
   "Efetch images directory.")
 
 (defvar ef-ascii-dir
-  "~/.emacs.d/efetch-mode/ascii-arts/"
+  (concat (file-name-directory load-file-name) "ascii-arts/")
   "Efetch ascii-arts directory.")
 
 (defvar ef-margin 15
