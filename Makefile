@@ -17,7 +17,7 @@
 
 EMACS = emacs -Q -q --batch -nw
 EMACS_COMPILE = -f emacs-lisp-byte-compile
-EMACS_DIR = ~/.emacs.d/efetch-mode/
+EMACS_DIR = ~/.emacs.d/efetch/
 
 IMAGES_DIR = images/
 INST_IMAGES_DIR = $(EMACS_DIR)$(IMAGES_DIR)
@@ -25,7 +25,7 @@ INST_IMAGES_DIR = $(EMACS_DIR)$(IMAGES_DIR)
 ASCII_DIR = ascii-arts/
 INST_ASCII_DIR = $(EMACS_DIR)$(ASCII_DIR)
 
-SOURCES = efetch-mode.el
+SOURCES = efetch.el
 COMPILED_FILE += $(SOURCES:.el=.elc)
 
 .PHONY: clean install uninstall compile copy-sources copy-images
