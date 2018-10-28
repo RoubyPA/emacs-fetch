@@ -1,4 +1,4 @@
-;;; efetch-mode.el --- Efetch major mode.            -*- lexical-binding: t; -*-
+;;; efetch.el --- Efetch major mode.                 -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2018  Pierre-Antoine Rouby
 ;; Copyright (C) 2018  David Tabarie
@@ -22,7 +22,8 @@
 
 ;;; Commentary:
 
-;; Major mode for Efetch buffer.
+;; Efetch provide an interface for visualising system information in
+;; emacs.
 
 ;;; Code:
 
@@ -371,7 +372,7 @@ buffer."
   "Create new `efetch' buffer and write data."
   (interactive)
   (let* ((buff  (generate-new-buffer "efetch")))
-    ;; Switch to new buffer and active efetch-mode
+    ;; Switch to new buffer and active efetch
     (set-buffer buff)
     (switch-to-buffer buff)
     (efetch-mode)
@@ -416,4 +417,4 @@ buffer."
   (use-local-map efetch-mode-map))
 
 (provide 'efetch)
-;;; efetch-mode.el ends here
+;;; efetch.el ends here
