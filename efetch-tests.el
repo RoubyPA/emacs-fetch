@@ -92,7 +92,8 @@
 
 
   ;; covered test
-  (message "(covered %d%%)" (* 100 (/ tests-passed tests-total))))
+  (message "(covered %2.2f%%)"
+           (* 100 (/ tests-passed tests-total))))
 
 (provide 'efetch-tests)
 ;;; efetch-tests.el ends here
