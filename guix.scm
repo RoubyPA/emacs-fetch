@@ -23,7 +23,8 @@
              (guix utils)
              (guix build-system emacs)
              (gnu packages)
-             (gnu packages emacs))
+             (gnu packages emacs)
+             (gnu packages xorg))
 
 (package
   (name "emacs-efetch")
@@ -34,8 +35,9 @@
   (arguments
    `(#:include '("\\.el$" "^images/" "^ascii-arts/")))
   (native-inputs `(("emacs" ,emacs-minimal)))
+  (propagated-inputs `(("xrandr" ,xrandr)))
   (home-page "https://framagit.org/prouby/emacs-fetch")
-  (synopsis "Major mode to display system information")
-  (description "This Emacs packages able to display system pieces of
-information.")
+  (synopsis "Emacs interface to display system information")
+  (description "This Emacs packages provide an interface for
+visualising system information in emacs")
   (license license:gpl3+))
