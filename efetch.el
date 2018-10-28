@@ -27,7 +27,7 @@
 
 ;;; Code:
 
-(defconst efetch-version "0.0.3"
+(defconst efetch-version "0.0.4"
   "Current efetch version.")
 
 (defvar ef-images-dir
