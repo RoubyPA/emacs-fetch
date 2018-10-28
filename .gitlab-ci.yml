@@ -16,8 +16,15 @@
 
 stages:
   - build
+  - guix
+
+make:
+  stage: build
+  script:
+    - make
+    - make check
 
 guix-build:
- stage: build
+ stage: guix
  script:
    - guix build -f guix.scm
