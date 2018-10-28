@@ -19,6 +19,8 @@ EMACS = emacs -Q -q --batch -nw
 EMACS_COMPILE = -f emacs-lisp-byte-compile
 EMACS_DIR = ~/.emacs.d/efetch/
 
+EMACS_RUN_TESTS = -f run
+
 IMAGES_DIR = images/
 INST_IMAGES_DIR = $(EMACS_DIR)$(IMAGES_DIR)
 
@@ -56,6 +58,11 @@ copy-ascii:
 	@cp -v ./$(ASCII_DIR)* $(INST_ASCII_DIR)
 
 install: compile copy-sources copy-images copy-ascii
+
+efetch-tests: efetch-tests.elc
+	@$(EMACS) --load $< $(EMACS_RUN_TESTS)
+
+check: compile efetch-tests
 
 uninstall:
 	$(info Uninstall)
