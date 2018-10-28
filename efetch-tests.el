@@ -38,7 +38,8 @@
     (message test-format name test-fail)))
 
 (defun run ()
-  (test "pass" t))
+  ;; ef-get-first-line
+  (test "ef-get-first-line" (equal "foo" (ef-get-first-line "foo\nbar\n"))))
 
 (provide 'efetch-tests)
 ;;; efetch-tests.el ends here

@@ -60,7 +60,7 @@ copy-ascii:
 install: compile copy-sources copy-images copy-ascii
 
 efetch-tests: efetch-tests.elc
-	@$(EMACS) --load $< $(EMACS_RUN_TESTS)
+	@$(EMACS) --load $< --load $(COMPILED_FILE) $(EMACS_RUN_TESTS)
 
 check: compile efetch-tests
 
