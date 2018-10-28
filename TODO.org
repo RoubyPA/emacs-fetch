@@ -18,3 +18,7 @@ Display terminal name, only without 'display-graphic-p'.
 * Packages
 
 ** Melpa package
+
+* Tests
+
+** Add test suite
