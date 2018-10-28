@@ -39,7 +39,9 @@
 
 (defun run ()
   ;; ef-get-first-line
-  (test "ef-get-first-line" (equal "foo" (ef-get-first-line "foo\nbar\n"))))
+  (test "ef-get-first-line" (equal "foo" (ef-get-first-line "foo\nbar\n")))
+  ;; ef-add-spaces
+  (test "ef-add-spaces" (equal "foo*****" (ef-add-spaces "foo" 5 "*"))))
 
 (provide 'efetch-tests)
 ;;; efetch-tests.el ends here
