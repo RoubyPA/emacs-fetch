@@ -214,10 +214,7 @@ This function make the first letter of the shell name uppercase:
                             line)))
     (if (eq find nil)
         nil
-      line)))
-
-(defun ef-resolution-list-of-data (line)
-  (remove "" (split-string line " ")))
+      (remove "" (split-string line " ")))))
 
 (defun ef-resolution-format-string (line)
   (format "%s " (nth 0 line)))
@@ -230,10 +227,9 @@ This function make the first letter of the shell name uppercase:
                    "\n")))
         (apply 'concat
                (mapcar 'ef-resolution-format-string
-                       (mapcar 'ef-resolution-list-of-data
-                               (remove nil
-                                       (mapcar 'ef-resolution-select-line
-                                               data))))))
+                       (remove nil
+                               (mapcar 'ef-resolution-select-line
+                                       data)))))
     ""))
 
 (defun ef-distro ()
