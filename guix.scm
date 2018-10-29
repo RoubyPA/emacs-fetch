@@ -23,6 +23,7 @@
              (guix utils)
              (guix build-system emacs)
              (gnu packages)
+             (gnu packages base)
              (gnu packages emacs)
              (gnu packages xorg))
 
@@ -33,8 +34,14 @@
                       #:recursive? #t))
   (build-system emacs-build-system)
   (arguments
-   `(#:include '("\\.el$" "^images/" "^ascii-arts/")))
-  (native-inputs `(("emacs" ,emacs-minimal)))
+   `(#:include '("\\.el$" "^images/" "^ascii-arts/")
+     ;; Run tests
+     #:tests? #t
+     #:emacs ,emacs
+     #:test-command '("make" "check")))
+  (native-inputs `(("emacs" ,emacs-minimal)
+                   ;; Need for tests
+                   ("make" ,gnu-make)))
   (propagated-inputs `(("xrandr" ,xrandr)))
   (home-page "https://framagit.org/prouby/emacs-fetch")
   (synopsis "Emacs interface to display system information")
