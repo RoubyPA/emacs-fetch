@@ -4,7 +4,8 @@
 ;; Copyright (C) 2018  David Tabarie
 
 ;; Author: Pierre-Antoine Rouby <contact@parouby.fr>
-;; Author: David Tabarie <david.tabarie@gmail.com>
+;;         David Tabarie <david.tabarie@gmail.com>
+;; Version: 0.0.4
 ;; Keywords: lisp, extensions
 
 ;; This program is free software; you can redistribute it and/or modify
