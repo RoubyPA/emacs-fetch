@@ -30,12 +30,21 @@
 (defconst efetch-version "0.0.4"
   "Current efetch version.")
 
+(defvar ef-dir (file-name-directory load-file-name)
+  "Load file dir.")
+
 (defvar ef-images-dir
-  (concat (file-name-directory load-file-name) "images/")
+  (let ((dir (concat ef-dir "images/")))
+    (if (file-exists-p (concat dir "default.png"))
+        dir
+      ef-dir))
   "Efetch images directory.")
 
 (defvar ef-ascii-dir
-  (concat (file-name-directory load-file-name) "ascii-arts/")
+  (let ((dir (concat ef-dir "ascii-arts/")))
+    (if (file-exists-p (concat dir "default"))
+        dir
+      ef-dir))
   "Efetch ascii-arts directory.")
 
 (defvar ef-margin 15
