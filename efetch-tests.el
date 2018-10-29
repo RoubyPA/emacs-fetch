@@ -60,7 +60,7 @@
   ;; ef-display
   (test "ef-display" 42)
   ;; ef-emacs-info
-  (test "ef-emacs-info" 42)
+  (test "ef-emacs-info" (not (equal "" (ef-emacs-info))))
   ;; ef-uname
   (test "ef-uname" 42)
   ;; ef-cpu-model
