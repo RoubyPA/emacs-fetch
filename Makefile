@@ -37,25 +37,26 @@ all: compile
 compile: $(SOURCES) $(COMPILED_FILE) $(EMACS_PAYLOAD)
 
 %.elc: %.el
-	$(info Compiling    $@)
+	$(info Compiling    $<)
 	@$(EMACS) $< $(EMACS_COMPILE)
 
 copy-sources:
-	$(info Install      *.elc)
+	$(info Install      sources)
 	@mkdir -p $(EMACS_DIR)
-	@cp -v *.el  $(EMACS_DIR)
-	@cp -v *.elc $(EMACS_DIR)
-	@cp -v LICENSE $(EMACS_DIR)
+	@cp ./$(SOURCES)       $(EMACS_DIR)$(SOURCES)
+	@cp ./$(COMPILED_FILE) $(EMACS_DIR)$(COMPILED_FILE)
+	@cp LICENSE            $(EMACS_DIR)LICENSE
 
 copy-images:
-	$(info Install      *.png)
+	$(info Install      images)
 	@mkdir $(INST_IMAGES_DIR) -p
-	@cp -v ./$(IMAGES_DIR)*.png $(INST_IMAGES_DIR)
-	@cp -v ./$(IMAGES_DIR)COPYRIGHT $(INST_IMAGES_DIR)
+	@cp ./$(IMAGES_DIR)*.png $(INST_IMAGES_DIR)
+	@cp ./$(IMAGES_DIR)COPYRIGHT $(INST_IMAGES_DIR)
 
 copy-ascii:
+	$(info Install      ascii-arts)
 	@mkdir $(INST_ASCII_DIR) -p
-	@cp -v ./$(ASCII_DIR)* $(INST_ASCII_DIR)
+	@cp ./$(ASCII_DIR)* $(INST_ASCII_DIR)
 
 install: compile copy-sources copy-images copy-ascii
 
@@ -66,11 +67,10 @@ check: compile efetch-tests
 
 uninstall:
 	$(info Uninstall)
-	@rm -v -f -r $(EMACS_DIR)
+	@rm -f -r $(EMACS_DIR)
 
 clean:
 	$(info Removing)
-	@rm -v -f *.elc
-	@rm -v -f $(EMACS_PAYLOAD)
+	@rm -f *.elc
 
 ## Makefile ends here
