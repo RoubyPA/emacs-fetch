@@ -16,7 +16,7 @@ Efetch (or emacs-fetch) is a free and hackable software.
 
 *** Coding style
 
-The project use Emacs default indentation style and use as possible
+The project use [[https://github.com/bbatsov/emacs-lisp-style-guide][Emacs-lisp style guide line]] and use as possible
 functional programming paradigm. So =while= and =for= loops are
 banned, please use recursive function and =map= function.
 
