@@ -265,6 +265,14 @@ This function make the first letter of the shell name uppercase:
    ;; Default
    (t "Unknown OS")))
 
+(defun ef-center-image (file)
+  (let* ((img   (create-image file))
+         (size  (image-size img))
+         (width (car size))
+         (left-margin (floor (- (window-total-width) width) 2)))
+    (indent-to left-margin)
+    (insert-image img)))
+
 (defun ef-insert-os-image (os)
   "If `ef-custom-image' variable is set with image path, insert
 this image, else insert image corresponding to OS distribution
@@ -274,15 +282,9 @@ with check of file existence. If no image is found, use
       (let* ((distro     (car (split-string os " ")))
              (distro-img (concat ef-images-dir distro ".png")))
         (if (file-exists-p distro-img)
-            (let* ((img   (create-image distro-img))
-                   (size  (image-size img))
-                   (width (car size))
-                   (left-margin (floor (- (window-total-width) width) 2)))
-              (indent-to left-margin)
-              (insert-image img))
-          (insert-image (create-image (concat ef-images-dir "default.png")))))
-    (insert-image
-     (create-image ef-custom-image))))
+	    (ef-center-image distro-img)
+          (ef-center-image (concat ef-images-dir "default.png"))))
+    (ef-center-image ef-custom-image)))
 
 (defun ef-insert-os-ascii (os)
   "If `ef-custom-ascii' variable is set with ascii path, insert
