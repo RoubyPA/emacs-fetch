@@ -146,15 +146,17 @@ a string."
   (when (equal n nil)
     (setq n 0))
 
-  (let* ((cmd "lspci -mm |grep 'VGA'")
-         (lines (split-string (shell-command-to-string cmd) "\n"))
-         (line (nth n lines)))
-    (if (string-equal line "")
-        line
-      (let* ((gpu (split-string line "\""))
-             (corp (car (split-string (nth 3 gpu) " ")))
-             (model (nth 5 gpu)))
-        (format "%s %s" corp model)))))
+  (if (not (eq (shell-command "lspci") 0))
+      ""
+    (let* ((cmd "lspci -mm |grep 'VGA'")
+	   (lines (split-string (shell-command-to-string cmd) "\n"))
+	   (line (nth n lines)))
+      (if (string-equal line "")
+	  line
+	(let* ((gpu (split-string line "\""))
+	       (corp (car (split-string (nth 3 gpu) " ")))
+	       (model (nth 5 gpu)))
+	  (format "%s %s" corp model))))))
 
 (defun ef-computer ()
   "Return the computer model as a string."
@@ -192,14 +194,16 @@ a string."
 
 (defun ef-load-avg ()
   "Return the average system load as string format."
-  (with-temp-buffer
-    (insert-file-contents "/proc/loadavg")
-    (let* ((line (buffer-substring-no-properties (line-beginning-position)
-                                                 (line-end-position)))
-           (sline (split-string line " ")))
-      (concat (nth 0 sline) " "
-              (nth 1 sline) " "
-              (nth 2 sline)))))
+  (if (file-exists-p "/proc/loadavg")
+      (with-temp-buffer
+	(insert-file-contents "/proc/loadavg")
+	(let* ((line (buffer-substring-no-properties (line-beginning-position)
+						     (line-end-position)))
+	       (sline (split-string line " ")))
+	  (concat (nth 0 sline) " "
+		  (nth 1 sline) " "
+		  (nth 2 sline))))
+    ""))
 
 (defun ef-shell ()
   "Return shell name as a string.
