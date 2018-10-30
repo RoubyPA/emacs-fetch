@@ -317,6 +317,12 @@ package manager with OS name."
              (shell-command-to-string
               "dpkg -l|wc -l"))
             " (Dpkg)"))
+   ;; PacMan
+   ((string-match "Manjaro\\|Arch" os)
+    (concat (ef-get-first-line
+	     (shell-command-to-string
+	      "pacman -Qe|wc -l"))
+	    " (PacMan)"))
    ;; Guix
    ((string-match "GuixSD" os)
     (let ((installed (ef-get-first-line
