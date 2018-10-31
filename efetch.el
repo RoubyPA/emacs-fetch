@@ -108,7 +108,7 @@ Data list is a list of associated list, like:
 L is a list like (\"key\" . \"value\")."
   (unless (or (equal l '())
               (equal l nil)
-	      (string-empty-p (cdr l)))
+	      (equal (cdr l) ""))
     (insert (car l))
     (indent-to ef-margin)
     (insert ef-separator (ef-cut-line (cdr l))
