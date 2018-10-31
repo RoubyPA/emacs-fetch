@@ -266,6 +266,15 @@ This function make the first letter of the shell name uppercase:
                     (shell-command-to-string
                      "guix system -V")
                     " \\|\n"))))
+   ;; True OS
+   ((file-exists-p "/etc/crontab.trueos")
+    "TrueOS")
+   ;; OS environment variable
+   ((not (eq (getenv "OS") nil))
+    (getenv "OS"))
+   ;; OSTYPE environment variable
+   ((not (eq (getenv "OSTYPE") nil))
+    (getenv "OSTYPE"))
    ;; Default
    (t "Unknown OS")))
 
