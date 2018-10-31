@@ -107,7 +107,8 @@ Data list is a list of associated list, like:
 
 L is a list like (\"key\" . \"value\")."
   (unless (or (equal l '())
-              (equal l nil))
+              (equal l nil)
+	      (string-empty-p (cdr l)))
     (insert (car l))
     (indent-to ef-margin)
     (insert ef-separator (ef-cut-line (cdr l))
@@ -365,11 +366,12 @@ package manager with OS name."
   "Insert efetch header and system information in current
 buffer."
   (let* ((os       (ef-distro))
+	 (kernel   (ef-uname "-s"))
          (packages (ef-installed-package os))
          (data  `(("OS"     . ,os)
                   ("Host"   . ,(ef-computer))
                   ("Uptime" . ,(ef-uptime))
-                  ("Kernel" . ,(ef-uname "-s"))
+                  ("Kernel" . ,kernel)
                   ("Kernel version" . ,(ef-uname "-r"))
                   ,(if (not (eq packages ""))
                        `("Packages" . ,packages))
