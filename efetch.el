@@ -134,12 +134,14 @@ a string."
   (when (eq n nil)
     (setq n 0))
 
-  (let* ((cmd "cat /proc/cpuinfo |grep 'model name'|uniq")
-         (cpus (split-string (shell-command-to-string cmd) "\n"))
-         (cpu (nth n cpus)))
-    (if (string-equal cpu "")
-        cpu
-      (cadr (split-string cpu ": ")))))
+  (if (not (file-readable-p "/proc/cpuinfo"))
+      ""
+    (let* ((cmd "cat /proc/cpuinfo |grep 'model name'|uniq")
+	   (cpus (split-string (shell-command-to-string cmd) "\n"))
+	   (cpu (nth n cpus)))
+      (if (string-equal cpu "")
+	  cpu
+	(cadr (split-string cpu ": "))))))
 
 (defun ef-gpu-model (&optional n)
   "Return the gpu model as a string. N is the GPU index (start to
@@ -162,18 +164,21 @@ a string."
 (defun ef-computer ()
   "Return the computer model as a string."
   (let* ((file-family "/sys/devices/virtual/dmi/id/product_family")
-         (file-name   "/sys/devices/virtual/dmi/id/product_name")
-         (family (if (file-readable-p file-family)
-                     (ef-get-first-line
-                      (shell-command-to-string
-                       (concat "cat " file-family)))
-                   ""))
-         (name (if (file-readable-p file-name)
-                   (ef-get-first-line
-                    (shell-command-to-string
-                     (concat "cat " file-name)))
-                 "")))
-    (format "%s %s" name family)))
+         (file-name   "/sys/devices/virtual/dmi/id/product_name"))
+    (if (not (and (file-readable-p file-family)
+		  (file-readable-p file-name)))
+	""
+      (let ((family (if (file-readable-p file-family)
+			(ef-get-first-line
+			 (shell-command-to-string
+			  (concat "cat " file-family)))
+		      ""))
+	    (name (if (file-readable-p file-name)
+		      (ef-get-first-line
+		       (shell-command-to-string
+			(concat "cat " file-name)))
+		    "")))
+	(format "%s %s" name family)))))
 
 (defun ef-uptime ()
   "Return system uptime."
