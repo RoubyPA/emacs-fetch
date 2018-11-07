@@ -56,13 +56,14 @@
   ;; ef-add-spaces
   (test "ef-add-spaces" (equal "foo*****" (ef-add-spaces "foo" 5 "*")))
   ;; ef-cut-line
-  (test "ef-cut-line" 42)
+  ;; (test "ef-cut-line" 42) ;Could not be tested
   ;; ef-display
-  (test "ef-display" 42)
+  ;; (test "ef-display" 42) ;Could not be tested
   ;; ef-emacs-info
   (test "ef-emacs-info" (not (equal "" (ef-emacs-info))))
   ;; ef-uname
-  (test "ef-uname" 42)
+  (test "ef-uname -r" (not (equal "" (ef-uname "-r"))))
+  (test "ef-uname -s" (not (equal "" (ef-uname "-s"))))
   ;; ef-cpu-model
   (test "ef-cpu-model" 42)
   ;; ef-gpu-model
