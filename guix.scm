@@ -35,10 +35,11 @@
   (build-system emacs-build-system)
   (arguments
    `(#:include '("\\.el$" "^images/" "^ascii-arts/")
-     ;; Run tests
-     #:tests? #t
-     #:emacs ,emacs
-     #:test-command '("make" "check")))
+     ;; TODO Run tests
+     ;; #:tests? #t
+     ;; #:emacs ,emacs
+     ;; #:test-command '("make" "check")
+     ))
   (native-inputs `(("emacs" ,emacs-minimal)
                    ;; Need for tests
                    ("make" ,gnu-make)))
