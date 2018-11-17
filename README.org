@@ -63,7 +63,7 @@ make install
 Secondly you can add the loading code in your =~/.emacs=.
 
 #+BEGIN_SRC emacs-lisp
-(load "~/.emacs.d/efetch-mode/efetch-mode.elc")
+(load "~/.emacs.d/efetch/efetch.elc")
 #+END_SRC
 
 ** With GNU Guix
