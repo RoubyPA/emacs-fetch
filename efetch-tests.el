@@ -96,16 +96,14 @@
 	  (ef-resolution-select-line
 	   "   1600x900      60.01*+  59.99    59.94    59.95    59.82    40.00"))))
   ;; ef-resolution-format-string
-  (test "ef-resolution-format-string" 42)
+  ;; (test "ef-resolution-format-string" 42)
   ;; ef-resolution
   (test "ef-resolution" 42)
   ;; ef-distro
-  (test "ef-distro" 42)
+  (test "ef-distro" (not (equal "Unknown OS" (ef-distro))))
   ;; ef-installed-package
-  (test "ef-installed-package" 42)
-  ;; ef-login-host
-  (test "ef-login-host" 42)
-
+  (test "ef-installed-package"
+	(not (equal "" (ef-installed-package (ef-distro)))))
 
   ;; covered test
   (message "(covered %2.2f%%)"
