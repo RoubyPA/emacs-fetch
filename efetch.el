@@ -423,7 +423,7 @@ buffer."
     ;; Set buffer to read only mode
     (read-only-mode t)))
 
-(defun efetch-update ()
+(defun efetch-update-all ()
   "Update current `efetch' buffer."
   (interactive)
   ;; Set buffer writable
@@ -438,6 +438,25 @@ buffer."
       ;; Set buffer to read only mode
       (read-only-mode t))))
 
+(defun efetch-update-image ()
+  "Update image position in current `efetch' buffer."
+  (interactive)
+  (if (not (string-equal mode-name "efetch"))
+      (progn (message "efetch: Not valide buffer !")
+             nil)
+    (let ((os (ef-distro)))
+      (read-only-mode 0)
+      ;; Goto first line and delete it
+      (goto-char (point-min))
+      (delete-region (line-beginning-position)
+		     (line-end-position))
+      ;; Display os image
+      (if (eq graphic-session t)
+    	  (ef-insert-os-image os)
+	(ef-insert-os-ascii os))
+      (goto-char (point-max))
+      (read-only-mode t))))
+
 ;;; Highlights
 (defvar efetch-highlights
   '(("\\(.*\\) :" . font-lock-function-name-face)
@@ -448,7 +467,8 @@ buffer."
 ;;; Keymap
 (defvar efetch-mode-map nil "Keymap for `efetch-mode'")
 (setq efetch-mode-map (make-sparse-keymap))
-(define-key efetch-mode-map (kbd "C-c C-c") 'efetch-update)
+(define-key efetch-mode-map (kbd "C-c C-c") 'efetch-update-image)
+(define-key efetch-mode-map (kbd "C-c C-a") 'efetch-update-all)
 
 ;;; Define mode
 (define-derived-mode efetch-mode fundamental-mode "efetch"
