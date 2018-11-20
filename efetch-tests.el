@@ -65,11 +65,11 @@
   (test "ef-uname -r" (not (equal "" (ef-uname "-r"))))
   (test "ef-uname -s" (not (equal "" (ef-uname "-s"))))
   ;; ef-cpu-model
-  (test "ef-cpu-model" 42)
+  (test "ef-cpu-model" (not (equal "" (ef-cpu-model))))
   ;; ef-gpu-model
-  (test "ef-gpu-model" 42)
+  (test "ef-gpu-model" (not (equal "" (ef-gpu-model))))
   ;; ef-computer
-  (test "ef-computer" 42)
+  (test "ef-computer" (not (equal "" (ef-computer))))
   ;; ef-uptime
   (test "ef-uptime" 42)
   ;; ef-load-avg
