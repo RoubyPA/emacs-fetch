@@ -182,7 +182,7 @@ a string."
 
 (defun ef-uptime ()
   "Return system uptime."
-  (if (not (file-exists-p "cat /proc/uptime"))
+  (if (not (file-exists-p "/proc/uptime"))
       ""
     (let* ((time (string-to-number
 		  (car (split-string (shell-command-to-string

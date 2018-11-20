@@ -71,7 +71,7 @@
   ;; ef-computer
   (test "ef-computer" (not (equal "" (ef-computer))))
   ;; ef-uptime
-  (test "ef-uptime" 42)
+  (test "ef-uptime" (not (equal "" (ef-uptime))))
   ;; ef-load-avg
   (test "ef-load-avg" 42)
   ;; ef-shell
