@@ -223,13 +223,15 @@ This function make the first letter of the shell name uppercase:
 (defun ef-desktop ()
   "Return desktop name."
   (let ((de (getenv "XDG_CURRENT_DESKTOP")))
-    (cond
-     ((string-match "GNOME" de)
-      (let ((version (split-string (ef-get-first-line
-                                    (shell-command-to-string
-                                     "gnome-session --version")))))
-        (concat de " " (car (last version)))))
-     (t de))))
+    (if (equal de nil)
+	""
+      (cond
+       ((string-match "GNOME" de)
+	(let ((version (split-string (ef-get-first-line
+				      (shell-command-to-string
+				       "gnome-session --version")))))
+          (concat de " " (car (last version)))))
+       (t de)))))
 
 (defun ef-resolution-select-line (line)
   "Return useful LINE if is useful or nil."
