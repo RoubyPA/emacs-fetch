@@ -79,7 +79,22 @@
   ;; ef-desktop
   (test "ef-desktop" (not (equal "" (ef-desktop))))
   ;; ef-resolution-select-line
-  (test "ef-resolution-select-line" 42)
+  (test "ef-resolution-select-line-01"
+	(equal
+	 nil
+	 (ef-resolution-select-line
+	  "Screen 0: minimum 320 x 200, current 2880 x 1024, maximum 8192 x 8192")))
+  (test "ef-resolution-select-line-02"
+	(equal
+	 nil
+	 (ef-resolution-select-line
+	  "   1280x800      59.99    59.97    59.81    59.91 ")))
+  (test "ef-resolution-select-line-03"
+	(not
+	 (equal
+	  nil
+	  (ef-resolution-select-line
+	   "   1600x900      60.01*+  59.99    59.94    59.95    59.82    40.00"))))
   ;; ef-resolution-format-string
   (test "ef-resolution-format-string" 42)
   ;; ef-resolution
