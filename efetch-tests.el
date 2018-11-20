@@ -73,11 +73,11 @@
   ;; ef-uptime
   (test "ef-uptime" (not (equal "" (ef-uptime))))
   ;; ef-load-avg
-  (test "ef-load-avg" 42)
+  (test "ef-load-avg" (not (equal "" (ef-load-avg))))
   ;; ef-shell
-  (test "ef-shell" 42)
+  (test "ef-shell" (not (equal "" (ef-shell))))
   ;; ef-desktop
-  (test "ef-desktop" 42)
+  (test "ef-desktop" (not (equal "" (ef-desktop))))
   ;; ef-resolution-select-line
   (test "ef-resolution-select-line" 42)
   ;; ef-resolution-format-string
