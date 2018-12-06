@@ -453,18 +453,18 @@ buffer."
   (if (not (string-equal mode-name "efetch"))
       (progn (message "efetch: Not valide buffer !")
              nil)
-    (let ((os (ef-distro)))
-      (read-only-mode 0)
-      ;; Goto first line and delete it
-      (goto-char (point-min))
-      (delete-region (line-beginning-position)
-		     (line-end-position))
-      ;; Display os image
-      (if (eq graphic-session t)
-    	  (ef-insert-os-image os)
-	(ef-insert-os-ascii os))
-      (goto-char (point-max))
-      (read-only-mode t))))
+    (if (eq graphic-session t)
+	(let ((os (ef-distro)))
+	  (read-only-mode 0)
+	  ;; Goto first line and delete it
+	  (goto-char (point-min))
+	  (delete-region (line-beginning-position)
+			 (line-end-position))
+	  ;; Display os image
+	  (ef-insert-os-image os)
+	  (goto-char (point-max))
+	  (read-only-mode t))
+      (message "efetch: Feature available only on graphic session"))))
 
 ;;; Highlights
 (defvar efetch-highlights
