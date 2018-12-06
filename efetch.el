@@ -75,6 +75,13 @@ Data list is a list of associated list, like:
 (defvar graphic-session (display-graphic-p)
   "Return t when emacs is run in graphic mode.") ;
 
+(defvar buff-log       (generate-new-buffer " *efetch-log*"))
+(defvar buff-log-error (generate-new-buffer " *efetch-log-error*"))
+
+(defun ef-prog-exists (cmd)
+  "Check if program exists."
+  (eq (shell-command cmd buff-log buff-log-error) 0))
+
 (defun ef-get-first-line (str)
   "Return first line of STR."
   (car (split-string str "\n")))
@@ -149,7 +156,7 @@ a string."
   (when (equal n nil)
     (setq n 0))
 
-  (if (not (eq (shell-command "lspci") 0))
+  (if (not (ef-prog-exists "lspci --version"))
       ""
     (let* ((cmd "lspci -mm |grep 'VGA'")
 	   (lines (split-string (shell-command-to-string cmd) "\n"))
@@ -245,7 +252,7 @@ This function make the first letter of the shell name uppercase:
   (format "%s " (nth 0 line)))
 
 (defun ef-resolution ()
-  (if (eq (shell-command "type -p xrandr") 0)
+  (if (ef-prog-exists "type -p xrandr")
       (let ((data (split-string
                    (shell-command-to-string
                     "xrandr --nograb --current")
@@ -267,10 +274,10 @@ This function make the first letter of the shell name uppercase:
             "cat /etc/os-release |grep PRETTY_NAME")
            "\"")))
    ;; lsb_release
-   ((eq (shell-command "type -p lsb_release") 0)
+   ((ef-prog-exists "type -p lsb_release")
     (ef-get-first-line (shell-command-to-string "lsb_release -sd")))
    ;; Guix
-   ((eq (shell-command "type -p guix") 0)
+   ((ef-prog-exists "type -p guix")
     (concat "GuixSD "
             (nth 4 (split-string
                     (shell-command-to-string
@@ -413,7 +420,7 @@ buffer."
 (defun efetch ()
   "Create new `efetch' buffer and write data."
   (interactive)
-  (let* ((buff  (generate-new-buffer "efetch")))
+  (let* ((buff      (generate-new-buffer "efetch")))
     ;; Switch to new buffer and active efetch
     (set-buffer buff)
     (switch-to-buffer buff)
