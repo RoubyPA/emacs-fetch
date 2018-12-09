@@ -67,7 +67,7 @@ variable is empty.")
 
 Data list is a list of associated list, like:
   '((\"name\"  . \"value\")
-    (\"name2\" . \"value2)")
+    (\"name2\" . \"value2\"))")
 
 (defvar ef-fast-display nil
   "When is t disable time expensive function.")
@@ -281,7 +281,8 @@ This function make the first letter of the shell name uppercase:
     (concat "GuixSD "
             (nth 4 (split-string
                     (shell-command-to-string
-                     "guix system -V")
+		     ;; Ignore possible error and warning on output
+                     "guix system -V 2> /dev/null")
                     " \\|\n"))))
    ;; True OS
    ((file-exists-p "/etc/crontab.trueos")
