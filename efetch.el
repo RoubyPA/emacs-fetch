@@ -28,6 +28,8 @@
 
 ;;; Code:
 
+(require 'package)
+
 (defconst efetch-version "0.0.4"
   "Current efetch version.")
 
