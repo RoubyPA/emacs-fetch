@@ -332,6 +332,15 @@ use `default' file."
   ;; Move cursor
   (goto-char (point-max)))
 
+(defun ef-emacs-packages ()
+  "Returns number of Emacs package installed."
+  (let ((sources (apply 'concat
+			(mapcar (lambda (n)
+				  (concat (capitalize (car n)) " "))
+				package-archives))))
+    (concat (number-to-string (length package-alist))
+	    " (" (substring sources 0 (- (length sources) 1)) ")")))
+
 (defun ef-installed-package (os)
   "Return package number as a string. This function detect
 package manager with OS name."
@@ -406,7 +415,8 @@ buffer."
                        `("GPU" . ,(ef-gpu-model 1)))
                   ("Load average" . ,(ef-load-avg))
                   ("Emacs"  . ,(ef-emacs-info))
-                  ("Emacs uptime" . ,(emacs-uptime)))))
+                  ("Emacs uptime" . ,(emacs-uptime))
+		  ("Emacs packages" . ,(ef-emacs-packages)))))
     ;; Insert Header
     (if (eq graphic-session t)
     	(ef-insert-os-image os)
