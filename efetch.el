@@ -133,9 +133,11 @@ L is a list like (\"key\" . \"value\")."
 (defun ef-uname (opt)
   "Exec uname with OPT and return the first line of the output as
 a string."
-  (car (split-string
-        (shell-command-to-string (format "uname %s" opt))
-        "\n")))
+  (if (ef-prog-exists "uname")
+      (car (split-string
+            (shell-command-to-string (format "uname %s" opt))
+            "\n"))
+    ""))
 
 (defun ef-cpu-model (&optional n)
   "Return the cpu model as a string. N is the CPU index (start to
