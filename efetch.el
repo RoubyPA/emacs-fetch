@@ -30,7 +30,7 @@
 
 (require 'package)
 
-(defconst efetch-version "0.0.4"
+(defconst efetch-version "0.0.5"
   "Current efetch version.")
 
 (defvar ef-dir (file-name-directory load-file-name)
