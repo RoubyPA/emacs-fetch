@@ -1,6 +1,6 @@
 ;;; efetch.el --- Efetch major mode.                 -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2018  Pierre-Antoine Rouby
+;; Copyright (C) 2018, 2019  Pierre-Antoine Rouby
 ;; Copyright (C) 2018  David Tabarie
 
 ;; Author: Pierre-Antoine Rouby <contact@parouby.fr>
@@ -483,7 +483,7 @@ buffer."
 
 ;;; Highlights
 (defvar efetch-highlights
-  '(("\\(.*\\) :" . font-lock-function-name-face)
+  '(("\\(.*\\) :" . (1 font-lock-function-name-face))
     ("Efetch"     . font-lock-constant-face)
     ("\\(.*\\)@\\(.*\\)"  . font-lock-type-face))
   "Eftech-mode highlights.")
