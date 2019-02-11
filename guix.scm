@@ -29,7 +29,7 @@
 
 (package
   (name "emacs-efetch")
-  (version "0.0.4")
+  (version "0.0.5")
   (source (local-file "." "efetch"
                       #:recursive? #t))
   (build-system emacs-build-system)
