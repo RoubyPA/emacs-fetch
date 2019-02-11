@@ -20,7 +20,8 @@
 
 ;;; Commentary:
 
-;; Test 'efetch.el' functions.
+;; Test 'efetch.el' functions. Lot of function could no be tested,
+;; because depend of system, current software environment, ...
 
 ;;; Code:
 
