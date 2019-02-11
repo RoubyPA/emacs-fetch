@@ -1,6 +1,9 @@
 #+title: Emacs Fetch
 #+startup: indent
 
+Efetch (or emacs-fetch) is a elisp GNU Emacs extention system
+information tool, inspired by [[https://github.com/dylanaraps/neofetch][neofetch]].
+
 [[./doc/images/efetch.png]]
 
 * Usage

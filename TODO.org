@@ -1,24 +1,19 @@
+-*- mode: org; coding: utf-8; -*-
+
 #+title: TODO list
 #+startup: indent
 
-* Data type
+* Data
 
 ** Pretty memory usage
 
 ** Terminal
 
-Display terminal name, only without 'display-graphic-p'.
+Display terminal emulator name, only without 'display-graphic-p'.
+Example: =gnome-terminal=, =xterm=, ...
 
 ** Disk space
-
-* Asciiart
-
-** Add distro ascii art
 
 * Packages
 
 ** Melpa package
-
-* Tests
-
-** Add test suite

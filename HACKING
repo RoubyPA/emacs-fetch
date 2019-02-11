@@ -3,7 +3,7 @@
 #+TITLE: Hacking efetch.
 #+STARTUP: indent
 
-Copyright (C) 2018 by Pierre-Antoine Rouby <contact@parouby.fr>
+Copyright (C) 2018, 2019 by Pierre-Antoine Rouby <contact@parouby.fr>
 
   This work is licensed under a [[http://creativecommons.org/licenses/by-sa/4.0/][Creative Commons
   Attribution-ShareAlike 4.0 International License]].
@@ -18,7 +18,7 @@ Efetch (or emacs-fetch) is a free and hackable software.
 
 The project use [[https://github.com/bbatsov/emacs-lisp-style-guide][Emacs-lisp style guide line]] and use as possible
 functional programming paradigm. So =while= and =for= loops are
-banned, please use recursive function and =map= function.
+banned, please use recursive function and/or =map= function.
 
 *** Editing code
 
@@ -36,6 +36,10 @@ Don't forget to made =M-q= to check your code indentation.
 
 Commit message format is very close than the ChangeLog format. Please
 see previous commit message.
+
+*** Copyright
+
+Add your own copyright at top of all of file you modified.
 
 * Communications
 
