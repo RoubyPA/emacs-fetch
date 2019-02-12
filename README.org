@@ -14,6 +14,12 @@ Create new efetch buffer.
 M-x efetch
 #+END_EXAMPLE
 
+Run efetch and take screenshot.
+
+#+BEGIN_EXAMPLE
+M-x efetch-with-screenshot
+#+END_EXAMPLE
+
 You can update the current eftech buffer with =C-c C-c= or with
 function =efetch-update=.
 

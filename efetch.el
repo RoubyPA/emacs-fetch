@@ -77,6 +77,10 @@ Data list is a list of associated list, like:
 (defvar graphic-session (display-graphic-p)
   "Return t when emacs is run in graphic mode.") ;
 
+(defvar ef-screenshot-quality 75
+  "Scrot image quality (1-100). See `scrot --help' for more
+  information")
+
 (defvar buff-log       (generate-new-buffer " *efetch-log*"))
 (defvar buff-log-error (generate-new-buffer " *efetch-log-error*"))
 
@@ -110,6 +114,19 @@ Data list is a list of associated list, like:
                             4))
               "...")
     str))
+
+;;;###autoload
+(defun ef-screenshot ()
+  "Take screenshot."
+  (interactive)
+  (cond
+   ((ef-prog-exists "type -p scrot")
+    ;; Run scrot on backgroud
+    (async-shell-command (format "scrot --quality=%d --delay=3"
+				 ef-screenshot-quality)
+			 buff-log buff-log-error)
+    t)
+   (t t)))
 
 (defun ef-display (l)
   "Display new line in eftech buffer.
@@ -432,7 +449,7 @@ buffer."
     (mapc 'ef-display ef-additional-data)))
 
 ;;;###autoload
-(defun efetch ()
+(defun efetch (&optional screenshot)
   "Create new `efetch' buffer and write data."
   (interactive)
   (let* ((buff      (generate-new-buffer "efetch")))
@@ -445,7 +462,17 @@ buffer."
     (efetch-write-data)
 
     ;; Set buffer to read only mode
-    (read-only-mode t)))
+    (read-only-mode t)
+
+    (when screenshot
+      (ef-screenshot))))
+
+;;;###autoload
+(defun efetch-with-screenshot ()
+  "Take screenshot after efecth buffer display."
+  (interactive)
+  (efetch t)
+  (efetch-update-image))
 
 (defun efetch-update-all ()
   "Update current `efetch' buffer."
