@@ -1,6 +1,6 @@
 ## Makefile --- Emacs-fetch Makefile.             -*- lexical-binding: t; -*-
 
-# Copyright (C) 2018  Pierre-Antoine Rouby
+# Copyright (C) 2018-2019  Pierre-Antoine Rouby
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,8 +18,6 @@
 EMACS = emacs -Q -q --batch -nw
 EMACS_COMPILE = -f emacs-lisp-byte-compile
 EMACS_DIR = ~/.emacs.d/efetch/
-
-EMACS_RUN_TESTS = -f run
 
 IMAGES_DIR = images/
 INST_IMAGES_DIR = $(EMACS_DIR)$(IMAGES_DIR)
@@ -60,10 +58,9 @@ copy-ascii:
 
 install: compile copy-sources copy-images copy-ascii
 
-efetch-tests: efetch-tests.elc
-	@$(EMACS) --load $< --load $(COMPILED_FILE) $(EMACS_RUN_TESTS)
 
-check: compile efetch-tests
+check:
+	$(MAKE) -C tests/ check
 
 uninstall:
 	$(info Uninstall)
