@@ -5,7 +5,7 @@
 
 ;; Author: Pierre-Antoine Rouby <contact@parouby.fr>
 ;;         David Tabarie <david.tabarie@gmail.com>
-;; Version: 0.0.4
+;; Version: 0.0.5
 ;; Keywords: lisp, extensions
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -88,9 +88,16 @@ Data list is a list of associated list, like:
   "Check if program exists."
   (eq (shell-command cmd buff-log buff-log-error) 0))
 
+(defun ef-ignore-warning-line (lines)
+  "Return the first line without 'warning'."
+  (if (string-match "warning" (car lines))
+      (ef-ignore-warning-line (cdr lines))
+    (car lines)))
+
 (defun ef-get-first-line (str)
   "Return first line of STR."
-  (car (split-string str "\n")))
+  (let ((lines (split-string str "\n")))
+    (ef-ignore-warning-line lines)))
 
 (defun ef-add-spaces (str n &optional sep)
   "Add N spaces to STR. You can replace spaces by SEP."
@@ -164,12 +171,18 @@ a string."
 
   (if (not (file-readable-p "/proc/cpuinfo"))
       ""
-    (let* ((cmd "cat /proc/cpuinfo |grep 'model name'|uniq")
+    (let* ((cmd  "cat /proc/cpuinfo |grep 'model name'|uniq")
 	   (cpus (split-string (shell-command-to-string cmd) "\n"))
-	   (cpu (nth n cpus)))
+	   (cpu  (nth n cpus)))
       (if (string-equal cpu "")
-	  cpu
-	(cadr (split-string cpu ": "))))))
+	  ""
+	(let ((cpu  (cadr (split-string cpu ": ")))
+	      (ncpu (length (split-string
+			     (shell-command-to-string
+			      (format "cat /proc/cpuinfo |grep \"%s\""
+				      cpu))
+			     "\n" t))))
+	  (format "%s (x%d)" cpu ncpu))))))
 
 (defun ef-gpu-model (&optional n)
   "Return the gpu model as a string. N is the GPU index (start to
@@ -227,6 +240,24 @@ a string."
 			  (concat "%y years, %d days, %h hours, "
 				  "%m minutes, %s seconds")))))
       (format-seconds time-format time))))
+
+(defun ef-memory ()
+  "Return memory usage."
+  (if (file-exists-p "/proc/meminfo")
+      (with-temp-buffer
+	(insert-file-contents "/proc/meminfo")
+	(let ((mem (mapcar (lambda (l)
+			     (cond
+			      ((string-match "MemTotal:" l)
+			       `(memtotal . ,(string-trim (cadr (split-string l ":")))))
+			      ((string-match "MemAvailable:" l)
+			       `(memavail . ,(string-trim (cadr (split-string l ":")))))
+			      (t nil)))
+			   (split-string (buffer-string) "\n" t))))
+	  (format "%s / %s"
+		  (cdr (assoc 'memavail mem))
+		  (cdr (assoc 'memtotal mem)))))
+    ""))
 
 (defun ef-load-avg ()
   "Return the average system load as string format."
@@ -434,6 +465,7 @@ buffer."
                   ("GPU"    . ,(ef-gpu-model))
                   ,(if (not (equal (ef-gpu-model 1) ""))
                        `("GPU" . ,(ef-gpu-model 1)))
+		  ("Memory" . ,(ef-memory))
                   ("Load average" . ,(ef-load-avg))
                   ("Emacs"  . ,(ef-emacs-info))
                   ("Emacs uptime" . ,(emacs-uptime))
@@ -510,7 +542,7 @@ buffer."
 
 ;;; Highlights
 (defvar efetch-highlights
-  '(("\\(.*\\) :" . (1 font-lock-function-name-face))
+  '(("\\(.*\\) :" . (1 font-lock-constant-face))
     ("Efetch"     . font-lock-constant-face)
     ("\\(.*\\)@\\(.*\\)"  . font-lock-type-face))
   "Eftech-mode highlights.")
